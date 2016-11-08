@@ -1,2 +1,7 @@
-include ':FFT-demo'
+include ':FFTBasedSpectrumAnalyzer'
 include ':FFT-lib'
+include ':FFT-demo'
+
+
+project(':FFT-lib').projectDir = new File('FFT-lib')
+project(':FFT-demo').projectDir = new File('FFT-demo')

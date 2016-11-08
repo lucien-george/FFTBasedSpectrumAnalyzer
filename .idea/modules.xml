@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/FFT-demo/FFT-demo.iml" filepath="$PROJECT_DIR$/FFT-demo/FFT-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/FFT-lib/FFT-lib.iml" filepath="$PROJECT_DIR$/FFT-lib/FFT-lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/FFTBasedSpectrumAnalyzer.iml" filepath="$PROJECT_DIR$/FFTBasedSpectrumAnalyzer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FFTBasedSpectrumAnalyzer/FFTBasedSpectrumAnalyzer-FFTBasedSpectrumAnalyzer.iml" filepath="$PROJECT_DIR$/FFTBasedSpectrumAnalyzer/FFTBasedSpectrumAnalyzer-FFTBasedSpectrumAnalyzer.iml" />
     </modules>
   </component>
 </project>
