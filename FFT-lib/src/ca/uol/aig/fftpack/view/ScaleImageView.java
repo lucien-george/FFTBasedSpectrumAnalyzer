@@ -50,8 +50,8 @@ public class ScaleImageView extends ImageView {
 			return;
 		}
 
-		int linesBig = viewWidth / 4;
-		int linesSmall = viewWidth / 16;
+		int linesBig = viewWidth / 20;
+		int linesSmall = viewWidth / 20;
 		canvasScale.drawLine(0, 25, viewWidth, 25, paintScaleDisplay);
 		for (int i = 0, j = 0; i < viewWidth; i = i + linesBig, j++) {
 			for (int k = i; k < (i + linesBig); k = k + linesSmall) {

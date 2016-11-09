@@ -64,7 +64,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				bufferReadResult = audioRecord.read(buffer, 0, blockSize);
 
 				for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
-					toTransform[i] = buffer[i] / 32768.0; // signed 16 bit
+					toTransform[i] = buffer[i] / 32768.0; // signed 16 bit524288.0;// signed 20 bit
 				}
 
 				transformer.ft(toTransform);
@@ -109,8 +109,8 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			Log.e("Stop failed", e.toString());
 		}
 
-		canvasDisplaySpectrum.drawColor(Color.BLACK);
-		imageViewDisplaySectrum.invalidate();
+		//canvasDisplaySpectrum.drawColor(Color.BLACK);
+		//imageViewDisplaySectrum.invalidate();
 	}
 
 	public boolean isStarted() {

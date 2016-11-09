@@ -47,7 +47,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		if (recordTask.isStarted()) {
 			startStopButton.setText("Start");
 			recordTask.setCancel();
-			canvasDisplaySpectrum.drawColor(Color.BLACK);
+			//canvasDisplaySpectrum.drawColor(Color.BLACK);
 		} else {
 			startStopButton.setText("Stop");
 			recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay, imageViewDisplaySectrum, width);
@@ -63,7 +63,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 		main.setOrientation(LinearLayout.VERTICAL);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		imageViewDisplaySectrum = new ImageView(this);
