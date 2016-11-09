@@ -21,7 +21,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 	private boolean started = false;
 	private boolean CANCELLED_FLAG = false;
 	private AudioRecord audioRecord;
-	int frequency = 8000;
+	int frequency =42000;
 	int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 	int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
 
@@ -64,7 +64,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				bufferReadResult = audioRecord.read(buffer, 0, blockSize);
 
 				for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
-					toTransform[i] = buffer[i] / 32768.0; // signed 16 bit524288.0;// signed 20 bit
+					toTransform[i] = buffer[i] / 32768.0; // signed 16 bit 524288.0;// signed 20 bit
 				}
 
 				transformer.ft(toTransform);
@@ -76,12 +76,12 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 	@Override
 	protected void onProgressUpdate(double[]... progress) {
-//		Log.v("onProgressUpdate:", Integer.toString(progress[0].length));
+		Log.v("onProgressUpdate:", Integer.toString(progress[0].length));
 		canvasDisplaySpectrum.drawColor(Color.GRAY);
 		if (width > 512) {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = 2 * i;
-				int downy = (int) (150 - (progress[0][i] * 10));
+				int downy = (int) (150 - (progress[0][i] * 80));
 				int upy = 150;
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
@@ -89,7 +89,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		} else {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = i;
-				int downy = (int) (150 - (progress[0][i] * 10));
+				int downy = (int) (150 - (progress[0][i] * 80));
 				int upy = 150;
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
