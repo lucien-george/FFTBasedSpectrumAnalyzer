@@ -1011,16 +1011,6 @@ class RealDoubleFFT_Mixed {
 	} 	/*rfftf*/
 
 	/*---------------------------------------------------------
-   rfftf: Real backward FFT
-  --------------------------------------------------------*/
-	void rfftb(int n, double r[], double wtable[]) {
-		if (n == 1) {
-			return;
-		}
-		rfftb1(n, r, wtable, 0);
-	} /*rfftb*/
-
-	/*---------------------------------------------------------
    rffti1: further initialization of Real FFT
   --------------------------------------------------------*/
 	void rffti1(int n, double wtable[], int offset) {
