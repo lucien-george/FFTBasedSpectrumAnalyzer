@@ -81,7 +81,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		if (width > 512) {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = 2 * i;
-				int downy = (int) (150 - (progress[0][i] * 60));
+				int downy = (int) (150 - (progress[0][i] * 10));
 				int upy = 150;
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
@@ -89,7 +89,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		} else {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = i;
-				int downy = (int) (150 - (progress[0][i] * 60));
+				int downy = (int) (150 - (progress[0][i] * 10));
 				int upy = 150;
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
