@@ -72,33 +72,33 @@ public class RealDoubleFFT extends RealDoubleFFT_Mixed {
 	 *          The remaining complex FFT coeffients can be obtained by the symmetry relation:
 	 *          the (<em>n</em>-<em>k</em>)-th complex FFT coeffient is the conjugate of <em>n</em>-th complex FFT coeffient.
 	 */
-	public void ft(double x[], Complex1D y) {
-		if (x.length != ndim) {
-			throw new IllegalArgumentException("The length of data can not match that of the wavetable");
-		}
-		rfftf(ndim, x, wavetable);
-
-		if (ndim % 2 == 0) {
-			y.x = new double[ndim / 2 + 1];
-			y.y = new double[ndim / 2 + 1];
-		} else {
-			y.x = new double[(ndim + 1) / 2];
-			y.y = new double[(ndim + 1) / 2];
-		}
-
-
-		y.x[0] = x[0];
-		y.y[0] = 0.0D;
-		for (int i = 1; i < (ndim + 1) / 2; i++) {
-			y.x[i] = x[2 * i - 1];
-			y.y[i] = x[2 * i];
-		}
-		if (ndim % 2 == 0) {
-			y.x[ndim / 2] = x[ndim - 1];
-			y.y[ndim / 2] = 0.0D;
-		}
-
-	}
+//	public void ft(double x[], Complex1D y) {
+//		if (x.length != ndim) {
+//			throw new IllegalArgumentException("The length of data can not match that of the wavetable");
+//		}
+//		rfftf(ndim, x, wavetable);
+//
+//		if (ndim % 2 == 0) {
+//			y.x = new double[ndim / 2 + 1];
+//			y.y = new double[ndim / 2 + 1];
+//		} else {
+//			y.x = new double[(ndim + 1) / 2];
+//			y.y = new double[(ndim + 1) / 2];
+//		}
+//
+//
+//		y.x[0] = x[0];
+//		y.y[0] = 0.0D;
+//		for (int i = 1; i < (ndim + 1) / 2; i++) {
+//			y.x[i] = x[2 * i - 1];
+//			y.y[i] = x[2 * i];
+//		}
+//		if (ndim % 2 == 0) {
+//			y.x[ndim / 2] = x[ndim - 1];
+//			y.y[ndim / 2] = 0.0D;
+//		}
+//
+//	}
 
 	/**
 	 * Backward real FFT transform. It is the unnormalized inverse transform of <em>ft</em>(double[]).
@@ -124,25 +124,25 @@ public class RealDoubleFFT extends RealDoubleFFT_Mixed {
 	 *          Also see the comments of <em>ft</em>(double[]) for the relation
 	 *          between <em>x</em> and complex FFT coeffients.
 	 */
-	public void bt(Complex1D x, double y[]) {
-		if (ndim % 2 == 0) {
-			if (x.x.length != ndim / 2 + 1) {
-				throw new IllegalArgumentException("The length of data can not match that of the wavetable");
-			}
-		} else {
-			if (x.x.length != (ndim + 1) / 2) {
-				throw new IllegalArgumentException("The length of data can not match that of the wavetable");
-			}
-		}
-
-		y[0] = x.x[0];
-		for (int i = 1; i < (ndim + 1) / 2; i++) {
-			y[2 * i - 1] = x.x[i];
-			y[2 * i] = x.y[i];
-		}
-		if (ndim % 2 == 0) {
-			y[ndim - 1] = x.x[ndim / 2];
-		}
-		rfftb(ndim, y, wavetable);
-	}
+//	public void bt(Complex1D x, double y[]) {
+//		if (ndim % 2 == 0) {
+//			if (x.x.length != ndim / 2 + 1) {
+//				throw new IllegalArgumentException("The length of data can not match that of the wavetable");
+//			}
+//		} else {
+//			if (x.x.length != (ndim + 1) / 2) {
+//				throw new IllegalArgumentException("The length of data can not match that of the wavetable");
+//			}
+//		}
+//
+//		y[0] = x.x[0];
+//		for (int i = 1; i < (ndim + 1) / 2; i++) {
+//			y[2 * i - 1] = x.x[i];
+//			y[2 * i] = x.y[i];
+//		}
+//		if (ndim % 2 == 0) {
+//			y[ndim - 1] = x.x[ndim / 2];
+//		}
+//		rfftb(ndim, y, wavetable);
+//	}
 }
