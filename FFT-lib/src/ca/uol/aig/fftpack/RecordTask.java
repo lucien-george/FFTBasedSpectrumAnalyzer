@@ -83,8 +83,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				int x = 2 * i;
 				int downy = (int) (150 - (progress[0][i] * 10));
 				int upy = 150;
-				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
-
+//				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
                 canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
 			imageViewDisplaySectrum.invalidate();
@@ -93,7 +92,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				int x = i;
 				int downy = (int) (150 - (progress[0][i] * 10));
 				int upy = 150;
-				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
+//				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
 
