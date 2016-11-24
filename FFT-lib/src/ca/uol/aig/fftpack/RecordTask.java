@@ -64,7 +64,10 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				bufferReadResult = audioRecord.read(buffer, 0, blockSize);
 
 				for (int i = 0; i < blockSize && i < bufferReadResult; i++) {
-					toTransform[i] = buffer[i] / 32768.0; // signed 16 bit 524288.0;// signed 20 bit
+					//Since the range of toTransform[i] is [-1,1), re-scale it
+					//such that its base is 0 instead of -1
+					toTransform[i] = /*1 +*/ (buffer[i] / 32768.0); // signed 16 bit
+//					if (toTransform[i] < 0) Log.w("NEGATIVE", Double.toString(buffer[i]));
 				}
 
 				transformer.ft(toTransform);
@@ -81,7 +84,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		if (width > 512) {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = 2 * i;
-				int downy = (int) (150 - (progress[0][i] * 10));
+				int downy = (int) (150 - (Math.abs(progress[0][i]) * 10));
 				int upy = 150;
 //				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
                 canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
@@ -90,7 +93,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		} else {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = i;
-				int downy = (int) (150 - (progress[0][i] * 10));
+				int downy = (int) (150 - (Math.abs(progress[0][i]) * 10));
 				int upy = 150;
 //				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);

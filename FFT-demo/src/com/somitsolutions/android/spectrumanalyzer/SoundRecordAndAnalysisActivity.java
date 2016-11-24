@@ -83,6 +83,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		imageViewScale = new ScaleImageView(this);
 		imageViewScale.setLayoutParams(layoutParams_imageViewScale);
 		imageViewScale.setId(View.NO_ID);
+//		imageViewScale.setPadding(0,0,0,20);
 		main.addView(imageViewScale);
 
 		//Button
