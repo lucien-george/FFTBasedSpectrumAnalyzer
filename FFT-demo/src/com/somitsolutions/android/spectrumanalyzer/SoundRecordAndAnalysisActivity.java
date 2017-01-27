@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.util.DisplayMetrics;
 
 import ca.uol.aig.fftpack.RecordTask;
 import ca.uol.aig.fftpack.view.ScaleImageView;
@@ -39,8 +40,13 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Display display = getWindowManager().getDefaultDisplay();
-		width = display.getWidth();
-		height = display.getHeight();
+
+		DisplayMetrics displayM = this.getResources().getDisplayMetrics();
+
+		width = displayM.widthPixels;
+		height = displayM.heightPixels;
+
+
 	}
 
 	public void onClick(View v) {
