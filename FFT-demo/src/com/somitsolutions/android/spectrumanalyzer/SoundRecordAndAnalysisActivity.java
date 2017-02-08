@@ -39,7 +39,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Display display = getWindowManager().getDefaultDisplay();
+		//Display display = getWindowManager().getDefaultDisplay();
 
 		DisplayMetrics displayM = this.getResources().getDisplayMetrics();
 
