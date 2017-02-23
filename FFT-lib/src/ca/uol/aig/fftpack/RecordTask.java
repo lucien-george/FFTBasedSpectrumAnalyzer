@@ -3,14 +3,15 @@ package ca.uol.aig.fftpack;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-
-
+import android.widget.RelativeLayout;
 
 
 //Async is used to avoid dealing with threads concurrences and therefore handlers.
@@ -18,21 +19,32 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 
 	private final int width;
-	private final ImageView imageViewDisplaySectrum;
+	private final ImageView imageViewDisplaySpectrum;
+	private final ImageView imageViewBicep;
+	private final ImageView imageViewTriceps;
+	private final ImageView imageViewForearm;
 	private final Canvas canvasDisplaySpectrum;
 	private final Paint paintSpectrumDisplay;
+	private RelativeLayout bparts;
 	private RealDoubleFFT transformer;
 	private int blockSize = 256;
 	private boolean started = false;
 	private boolean CANCELLED_FLAG = false;
 	private AudioRecord audioRecord;
 	private int sampleRate =42000;
-	
-	//threshold @// TODO: 2017-02-07
-	private int muscles_counterThreshold=6;
+	private final body body;
 
-	//threshold magnitude @// TODO: 2017-02-07
-	final int THRESHOLD = 100;
+
+	
+
+	private int muscles_counterThreshold=1;
+
+
+	final int THRESHOLD = 10;
+	int counter = 0;
+	boolean BwasActive = false;
+	boolean TwasActive = false;
+	boolean FwasActive = false;
 
 	// changed from "CHANNEL_CONFIGURATION_MONO" to "CHANNEL_IN_MONO", newest version
 	int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
@@ -41,12 +53,18 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 	int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
 
 	//constructor initializing RecordTask
-	public RecordTask(Canvas canvasDisplaySpectrum, Paint paintSpectrumDisplay, ImageView imageViewDisplaySectrum, int width) {
+	public RecordTask(Canvas canvasDisplaySpectrum, Paint paintSpectrumDisplay, ImageView imageViewDisplaySectrum, RelativeLayout bparts,
+					  ImageView imageViewBicep, ImageView imageViewTriceps, ImageView imageViewForearm, int width, body body) {
 		this.width = width;
 		blockSize = width / 2;
-		this.imageViewDisplaySectrum = imageViewDisplaySectrum;
+		this.imageViewDisplaySpectrum = imageViewDisplaySectrum;
+		this.bparts = bparts;
+		this.imageViewBicep= imageViewBicep;
+		this.imageViewTriceps= imageViewTriceps;
+		this.imageViewForearm=imageViewForearm;
 		this.canvasDisplaySpectrum = canvasDisplaySpectrum;
 		this.paintSpectrumDisplay = paintSpectrumDisplay;
+		this.body=body;
 	}
 
 	//invoked on the UI thread before the task is executed <-- "AsyncTast" extension
@@ -63,8 +81,8 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 		double[] re = new double[blockSize];
 		double[] im = new double[blockSize];
-		double[] magnitude = new double[blockSize];
-		double frequency[] = new double[blockSize];
+		double[] magnitude = new double[blockSize/2];
+		double [] frequency = new double[blockSize];
 		int bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfiguration, audioEncoding);
 		audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, sampleRate, channelConfiguration, audioEncoding, bufferSize);
 		int bufferReadResult;
@@ -101,57 +119,92 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				//Forwards Fourier Transforms toTransform[]
 				transformer.ft(toTransform);
 				//to publish results on the IU thread
-
-				// Calculate the Real and imaginary and Magnitude.
-				for(int i = 0; i < (blockSize/2); i++){
-					// real is stored in first part of array
-					re[i] = toTransform[i*2];
-					// imaginary is stored in the sequential part
-					im[i] = toTransform[(i*2)+1];
-
-				}
-
-
-				for(int i =0; i < blockSize; i++){
-
-					// magnitude is calculated by the square root of (imaginary^2 + real^2)
-					magnitude[i] = Math.sqrt((re[i] * re[i]) + (im[i]*im[i]));
-					// calculated the frequency
-					frequency[i] = (sampleRate * magnitude[i])/blockSize;
-
-					//checks how many signals are above threshold
-					if (magnitude[i]>THRESHOLD) {
-
-						//checks if the signal belongs to one of the targeted muscle frequency window
-						//then increment counter for each muscle frequency window
-						if (frequency[i] > (body.BICEP_FRQ-200) && frequency[i] < (body.BICEP_FRQ+200)) {
-
-							//increase counter by one
-							body.setBicep_counter();
-						}else if(frequency[i] > (body.TRICEPS_FRQ-200) && frequency[i] < (body.TRICEPS_FRQ+200)){
-							//increase counter by one
-							body.setTriceps_counter();
-						}else if(frequency[i] > (body.FOREARM_FRQ-200) && frequency[i] < (body.FOREARM_FRQ+200)){
-							//increase counter by one
-							body.setForearm_counter();
-						}
-					}
-					
-				}
-
-				if (body.getBicep_counter()>muscles_counterThreshold)
-					body.isBicepActive=true;
-				if (body.getTriceps_counter()>muscles_counterThreshold)
-					body.isTricepsActive=true;
-				if (body.getForearm_counter()>muscles_counterThreshold)
-					body.isForearmActive=true;
-				Log.d("doInBackground", "we made it");
 			}
 
-			publishProgress(magnitude);
+			publishProgress(freqMagnitude(toTransform));
 
 		}
 		return true;
+	}
+
+
+	//returns the magnitude and which muscle has been activated
+
+	double [] freqMagnitude(double [] toTransform){
+
+		double[] re = new double[blockSize];
+		double[] im = new double[blockSize];
+		double[] magnitude = new double[blockSize/2];
+		double frequency[] = new double[blockSize/2];
+
+		// Calculate the Real and imaginary and Magnitude.
+		for(int i = 0; i < (blockSize/2); i++){
+			// real is stored in first part of array
+			re[i] = toTransform[i*2];
+			// imaginary is stored in the sequential part
+			im[i] = toTransform[(i*2)+1];
+
+		}
+
+
+		for(int i =0; i < (blockSize/2) ; i++){
+
+			// magnitude is calculated by the square root of (imaginary^2 + real^2)
+			magnitude[i] = Math.sqrt((re[i] * re[i]) + (im[i]*im[i]));
+			// calculated the frequency
+			frequency[i] = i*(sampleRate)/(blockSize);
+
+			//Log.d("magnitude", Double.toString(magnitude[i]));
+			//Log.d("frequency", Double.toString(frequency[i]));
+
+			//checks how many signals are above threshold
+			if (magnitude[i]>THRESHOLD) {
+				//checks if the signal belongs to one of the targeted muscle frequency window
+				//then increment counter for each muscle frequency window
+				if (frequency[i] > (body.BICEP_FRQ-200) && frequency[i] < (body.BICEP_FRQ+200)) {
+
+					Log.d("bicepfrq", Double.toString(frequency[i]));
+					//increase counter by one
+					body.setBicep_counter(1);
+				}else if(frequency[i] > (body.TRICEPS_FRQ-200) && frequency[i] < (body.TRICEPS_FRQ+200)){
+
+					Log.d("tricepsfrq", Double.toString(frequency[i]));
+					//increase counter by one
+					body.setTriceps_counter(1);
+				}else if(frequency[i] > (body.FOREARM_FRQ-200) && frequency[i] < (body.FOREARM_FRQ+200)){
+
+					Log.d("forearmfrq", Double.toString(frequency[i]));
+					//increase counter by one
+					body.setForearm_counter(1);
+				}
+			}
+
+		}
+
+		if (body.getBicep_counter()>muscles_counterThreshold) {
+			body.isBicepActive = true;
+			body.setBicep_counter(0);
+		}
+		else
+			body.isBicepActive=false;
+
+		if (body.getTriceps_counter()>muscles_counterThreshold) {
+			body.isTricepsActive = true;
+			body.setTriceps_counter(0);
+		}
+		else
+			body.isTricepsActive=false;
+
+		if (body.getForearm_counter()>muscles_counterThreshold) {
+			body.isForearmActive = true;
+			body.setForearm_counter(0);
+		}
+		else
+			body.isForearmActive=false;
+
+		Log.d("doInBackground", "we made it");
+
+		return magnitude;
 	}
 
 	//UPDATE SCREEN by invoked on the UI thread after a call to publishProgress()
@@ -161,16 +214,18 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		Log.v("onProgressUpdate:", Integer.toString(progress[0].length));
 		canvasDisplaySpectrum.drawColor(Color.GRAY);
 
+
+
 		//if screen large is enough double the size
 		if (width > 512) {
 			for (int i = 0; i < progress[0].length; i++) {
-				int x = 2 * i;
-				int downy = (int) (150 - (Math.abs(progress[0][i]) * 10));
-				int upy = 150;
+				int x = 4 * i;
+				int downy = (int) (200 - (progress[0][i] * 10));
+				int upy = 200;
 //				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
                 canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
-			imageViewDisplaySectrum.invalidate();
+			imageViewDisplaySpectrum.invalidate();
 		} else {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = i;
@@ -180,8 +235,55 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
 
-			imageViewDisplaySectrum.invalidate();
+
+
+			imageViewDisplaySpectrum.invalidate();
 		}
+
+
+		while (counter <0) {
+
+
+			if (body.isBicepActive && !BwasActive) {
+				bparts.addView(imageViewBicep);
+				BwasActive=true;
+				body.isBicepActive=false;
+			}
+			else if (!body.isBicepActive && BwasActive){
+				bparts.removeView(imageViewBicep);
+				BwasActive=false;
+			}
+
+			if (body.isTricepsActive && !TwasActive){
+				bparts.addView(imageViewTriceps);
+				TwasActive=true;
+				body.isTricepsActive=false;
+			}
+			else if(!body.isTricepsActive && TwasActive){
+				bparts.removeView(imageViewTriceps);
+				TwasActive=false;
+			}
+
+			if (body.isForearmActive && !FwasActive) {
+				bparts.addView(imageViewForearm);
+				FwasActive=true;
+				body.isForearmActive=false;
+			}
+			else if (!body.isForearmActive && FwasActive){
+				bparts.removeView(imageViewForearm);
+				FwasActive=false;
+			}
+
+			imageViewBicep.invalidate();
+			imageViewTriceps.invalidate();
+			imageViewForearm.invalidate();
+
+			counter=15;
+			//counterB=false;
+		}
+		counter--;
+
+
 	}
 
 	@Override
