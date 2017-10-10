@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
+import android.util.DisplayMetrics;
 
 public class ScaleImageView extends ImageView {
     Paint paintScaleDisplay;
@@ -15,6 +18,8 @@ public class ScaleImageView extends ImageView {
     Canvas canvasScale;
     private int viewWidth;
     private int viewHeight;
+
+
 
     public ScaleImageView(Context context) {
         super(context);
@@ -31,6 +36,8 @@ public class ScaleImageView extends ImageView {
     private void init() {
         if (!isInEditMode()) {
             bitmapScale = Bitmap.createBitmap(viewWidth, 150, Bitmap.Config.ARGB_8888);
+
+
 
             paintScaleDisplay = new Paint();
             paintScaleDisplay.setColor(Color.WHITE);
@@ -74,6 +81,11 @@ public class ScaleImageView extends ImageView {
             }
         }
 //		canvas.drawBitmap(bitmapScale, 0, 0, paintScaleDisplay);
+
+
+
+
+
     }
 
     @Override

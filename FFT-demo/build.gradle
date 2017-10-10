@@ -5,12 +5,15 @@ dependencies {
 }
 
 android {
-    compileSdkVersion defaultCompileSdkVersion
-    buildToolsVersion defaultBuildToolsVersion
+    compileSdkVersion 23
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
-        minSdkVersion defaultMinSdkVersion
-        targetSdkVersion defaultTargetSdkVersion
+
+        versionCode 1
+        versionName "1.0.0"
+        minSdkVersion 18
+        targetSdkVersion 22
     }
 
     lintOptions { abortOnError false }
