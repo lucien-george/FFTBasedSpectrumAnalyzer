@@ -732,8 +732,8 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 	public void updateDrawBody() throws InterruptedException {
 		// Test Color Transition
-		drawBody.setPaintBicep();
-//		drawBody.setPaintBicep(body.isBicepActive);
+//		drawBody.setPaintBicep();
+		drawBody.setPaintBicep(body.isBicepActive);
 		drawBody.setPaintForearm(body.isForearmActive);
 		drawBody.setPaintTriceps(body.isTricepsActive);
 	}

@@ -82,7 +82,7 @@ public class drawBody extends ImageView {
             bitmapBody = Bitmap.createBitmap(width, 800, Bitmap.Config.ARGB_8888);
 
             paintBicep = new Paint();
-            paintBicep.setColor(Color.GREEN);
+            paintBicep.setColor(Color.RED);
             paintBicep.setStyle(Paint.Style.FILL_AND_STROKE);
             paintBicep.setStrokeWidth(15);
 
