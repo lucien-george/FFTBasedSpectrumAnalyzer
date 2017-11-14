@@ -1,5 +1,6 @@
 package com.somitsolutions.android.spectrumanalyzer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -106,6 +107,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
 	}
 
+	@SuppressLint("NewApi")
 	protected void askPermissions() {
 		String[] permissions = {
 				"android.permission.READ_EXTERNAL_STORAGE",
@@ -118,6 +120,8 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	public void onClick(View v) {
 
 		if(v.equals(UpdateButton)) {
+			// Test color transition
+//			drawBody.setPaintBicep();
 			recordTask.setCancel();
 
 			stringB = BicepTxt.getText().toString();
