@@ -59,22 +59,6 @@ public class drawBody extends ImageView {
 
         if (!isInEditMode()) {
 
-            handler = new Handler() {
-                @Override
-                public void close() {
-
-                }
-
-                @Override
-                public void flush() {
-
-                }
-
-                @Override
-                public void publish(LogRecord logRecord) {
-
-                }
-            };
             displayM = this.getResources().getDisplayMetrics();
             width = displayM.widthPixels;
             height = (displayM.heightPixels);
