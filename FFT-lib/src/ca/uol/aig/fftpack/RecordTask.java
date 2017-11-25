@@ -1,5 +1,8 @@
 package ca.uol.aig.fftpack;
 
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,6 +16,7 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -638,34 +642,70 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 
 			if (body.isBicepActive && !BwasActive) {
-				drawBody.paintBicep.setColor(Color.RED);
+//				drawBody.paintBicep.setColor(Color.RED);
+				ObjectAnimator colorFade = ObjectAnimator.ofObject(drawBody.paintBicep,"color", new ArgbEvaluator(),  drawBody.paintBicep.getColor() , Color.RED);
+				colorFade.setInterpolator(new LinearInterpolator());
+				colorFade.setDuration(4000);
+				AnimatorSet t = new AnimatorSet();
+				t.play(colorFade);
+				t.start();
 				BwasActive=true;
 				body.isBicepActive=false;
 			}
 			else if (!body.isBicepActive && BwasActive){
-				drawBody.paintBicep.setColor(Color.GREEN);
+//				drawBody.paintBicep.setColor(Color.GREEN);
+				ObjectAnimator colorFade = ObjectAnimator.ofObject(drawBody.paintBicep,"color", new ArgbEvaluator(),  drawBody.paintBicep.getColor() , Color.GREEN);
+				colorFade.setInterpolator(new LinearInterpolator());
+				colorFade.setDuration(4000);
+				AnimatorSet t = new AnimatorSet();
+				t.play(colorFade);
+				t.start();
 				BwasActive=false;
 			}
 
 			if (body.isTricepsActive && !TwasActive){
-				drawBody.paintTriceps.setColor(Color.RED);
+//				drawBody.paintTriceps.setColor(Color.RED);
+				ObjectAnimator    colorFade = ObjectAnimator.ofObject(drawBody.paintTriceps,"color", new ArgbEvaluator(),  drawBody.paintTriceps.getColor() , Color.RED);
+				colorFade.setInterpolator(new LinearInterpolator());
+				colorFade.setDuration(4000);
+				AnimatorSet t = new AnimatorSet();
+				t.play(colorFade);
+				t.start();
 				TwasActive=true;
 				body.isTricepsActive=false;
 			}
 			else if(!body.isTricepsActive && TwasActive){
-				drawBody.paintTriceps.setColor(Color.GREEN);
+//				drawBody.paintTriceps.setColor(Color.GREEN);
+				ObjectAnimator    colorFade = ObjectAnimator.ofObject(drawBody.paintTriceps,"color", new ArgbEvaluator(),  drawBody.paintTriceps.getColor() , Color.GREEN);
+				colorFade.setInterpolator(new LinearInterpolator());
+				colorFade.setDuration(4000);
+				AnimatorSet t = new AnimatorSet();
+				t.play(colorFade);
+				t.start();
 				TwasActive=false;
 			}
 
 			if (body.isForearmActive && !FwasActive) {
 				//drawBody.setPaintForearm(body.isForearmActive);
-				drawBody.paintForearm.setColor(Color.RED);
+//				drawBody.paintForearm.setColor(Color.RED);
+				ObjectAnimator    colorFade = ObjectAnimator.ofObject(drawBody.paintForearm,"color", new ArgbEvaluator(),  drawBody.paintForearm.getColor() , Color.RED);
+				colorFade.setInterpolator(new LinearInterpolator());
+				colorFade.setDuration(4000);
+				AnimatorSet t = new AnimatorSet();
+				t.play(colorFade);
+				t.start();
 				FwasActive=true;
 				body.isForearmActive=false;
 			}
 			else if (!body.isForearmActive && FwasActive){
 				//drawBody.setPaintForearm(body.isForearmActive);
-				drawBody.paintForearm.setColor(Color.GREEN);
+//				drawBody.paintForearm.setColor(Color.GREEN);
+				ObjectAnimator    colorFade = ObjectAnimator.ofObject(drawBody.paintForearm,"color", new ArgbEvaluator(),  drawBody.paintForearm.getColor() , Color.GREEN);
+				colorFade.setInterpolator(new LinearInterpolator());
+				colorFade.setDuration(4000);
+				AnimatorSet t = new AnimatorSet();
+				t.play(colorFade);
+				t.start();
 				FwasActive=false;
 			}
 

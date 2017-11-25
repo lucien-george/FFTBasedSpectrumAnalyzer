@@ -241,43 +241,43 @@ public class drawBody extends ImageView {
 
     public void setPaintTriceps(boolean active){
         if(active){
-            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintBicep.getColor() , Color.RED);
+            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintTriceps.getColor() , Color.RED);
             colorFade.setInterpolator(new LinearInterpolator());
             colorFade.setDuration(4000);
             AnimatorSet t = new AnimatorSet();
             t.play(colorFade);
             t.start();
-//            paintBicep.setColor(Color.RED);
+//            paintTriceps.setColor(Color.RED);
         }
         else{
-            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintBicep.getColor() , Color.GREEN);
+            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintTriceps.getColor() , Color.GREEN);
             colorFade.setInterpolator(new LinearInterpolator());
             colorFade.setDuration(4000);
             AnimatorSet t = new AnimatorSet();
             t.play(colorFade);
             t.start();
-//            paintBicep.setColor(Color.GREEN);
+//            paintTriceps.setColor(Color.GREEN);
         }
     }
 
     public void setPaintForearm(boolean active){
         if(active){
-            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintBicep.getColor() , Color.RED);
+            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintForearm,"color", new ArgbEvaluator(),  paintForearm.getColor() , Color.RED);
             colorFade.setInterpolator(new LinearInterpolator());
             colorFade.setDuration(4000);
             AnimatorSet t = new AnimatorSet();
             t.play(colorFade);
             t.start();
-//            paintBicep.setColor(Color.RED);
+//            paintForearm.setColor(Color.RED);
         }
         else{
-            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintBicep.getColor() , Color.GREEN);
+            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintForearm,"color", new ArgbEvaluator(),  paintForearm.getColor() , Color.GREEN);
             colorFade.setInterpolator(new LinearInterpolator());
             colorFade.setDuration(4000);
             AnimatorSet t = new AnimatorSet();
             t.play(colorFade);
             t.start();
-//            paintBicep.setColor(Color.GREEN);
+//            paintForearm.setColor(Color.GREEN);
         }
     }
 }
