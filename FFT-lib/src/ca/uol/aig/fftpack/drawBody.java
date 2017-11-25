@@ -83,7 +83,7 @@ public class drawBody extends ImageView {
             paintForearm0 = new Paint();
             paintForearm0.setColor(Color.GREEN);
             paintForearm0.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintForearm0.setStrokeWidth(20);
+            paintForearm0.setStrokeWidth(15);
 
             paintForearm1 = new Paint();
             paintForearm1.setColor(Color.BLACK);
