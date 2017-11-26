@@ -719,41 +719,41 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			int x=drawBody.width/3;
 			int y=0;
 
-			drawBody.paintForearm1.setColor(Color.BLACK);
-
-			if (av > 35){
-				drawBody.paintForearm1.setColor(Color.BLACK);
-
-				drawBody.paintForearm0.setColor(Color.BLACK);
-
-				drawBody.paintForearm2.setColor(Color.BLACK);
-				drawBody.paintForearm3.setColor(drawBody.paintForearm.getColor());
-			}
-			else if(av>25) {
-				drawBody.paintForearm1.setColor(Color.BLACK);
-
-				drawBody.paintForearm0.setColor(Color.BLACK);
-
-				drawBody.paintForearm3.setColor(Color.BLACK);
-				drawBody.paintForearm2.setColor(drawBody.paintForearm.getColor());
-			}
-			else if(av>15){
-				drawBody.paintForearm1.setColor(drawBody.paintForearm.getColor());
-
-				drawBody.paintForearm0.setColor(Color.BLACK);
-
-				drawBody.paintForearm3.setColor(Color.BLACK);
-				drawBody.paintForearm2.setColor(Color.BLACK);
-			}
-
-			else if(av>5){
-				drawBody.paintForearm1.setColor(Color.BLACK);
-
-				drawBody.paintForearm0.setColor(drawBody.paintForearm.getColor());
-
-				drawBody.paintForearm3.setColor(Color.BLACK);
-				drawBody.paintForearm2.setColor(Color.BLACK);
-			}
+//			drawBody.paintForearm1.setColor(Color.BLACK);
+//
+//			if (av > 35){
+//				drawBody.paintForearm1.setColor(Color.BLACK);
+//
+//				drawBody.paintForearm0.setColor(Color.BLACK);
+//
+//				drawBody.paintForearm2.setColor(Color.BLACK);
+//				drawBody.paintForearm3.setColor(drawBody.paintForearm.getColor());
+//			}
+//			else if(av>25) {
+//				drawBody.paintForearm1.setColor(Color.BLACK);
+//
+//				drawBody.paintForearm0.setColor(Color.BLACK);
+//
+//				drawBody.paintForearm3.setColor(Color.BLACK);
+//				drawBody.paintForearm2.setColor(drawBody.paintForearm.getColor());
+//			}
+//			else if(av>15){
+//				drawBody.paintForearm1.setColor(drawBody.paintForearm.getColor());
+//
+//				drawBody.paintForearm0.setColor(Color.BLACK);
+//
+//				drawBody.paintForearm3.setColor(Color.BLACK);
+//				drawBody.paintForearm2.setColor(Color.BLACK);
+//			}
+//
+//			else if(av>5){
+//				drawBody.paintForearm1.setColor(Color.BLACK);
+//
+//				drawBody.paintForearm0.setColor(drawBody.paintForearm.getColor());
+//
+//				drawBody.paintForearm3.setColor(Color.BLACK);
+//				drawBody.paintForearm2.setColor(Color.BLACK);
+//			}
 
 
 

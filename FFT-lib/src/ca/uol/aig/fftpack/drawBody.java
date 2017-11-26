@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,7 +12,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.util.DisplayMetrics;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.graphics.PorterDuff.Mode;
 
@@ -34,19 +38,19 @@ public class drawBody extends ImageView {
     public Paint paintBicep;
     public Paint paintTriceps;
     public Paint paintForearm;
-    public Paint paintForearm0;
-    public Paint paintForearm1;
-    public Paint paintForearm2;
-    public Paint paintForearm3;
+//    public Paint paintForearm0;
+//    public Paint paintForearm1;
+//    public Paint paintForearm2;
+//    public Paint paintForearm3;
 
 
     Bitmap bitmapBody;
     Canvas canvasBicep;
     Canvas canvasTriceps;
     Canvas canvasForearm;
-    Canvas canvasForearm1;
-    Canvas canvasForearm2;
-    Canvas canvasForearm3;
+//    Canvas canvasForearm1;
+//    Canvas canvasForearm2;
+//    Canvas canvasForearm3;
     Handler handler;
 
     public drawBody(Context context){
@@ -80,36 +84,36 @@ public class drawBody extends ImageView {
             paintForearm.setStyle(Paint.Style.FILL_AND_STROKE);
             paintForearm.setStrokeWidth(20);
 
-            paintForearm0 = new Paint();
-            paintForearm0.setColor(Color.GREEN);
-            paintForearm0.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintForearm0.setStrokeWidth(15);
-
-            paintForearm1 = new Paint();
-            paintForearm1.setColor(Color.BLACK);
-            paintForearm1.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintForearm1.setStrokeWidth(20);
-
-            paintForearm2 = new Paint();
-            paintForearm2.setColor(Color.BLACK);
-            paintForearm2.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintForearm2.setStrokeWidth(20);
-
-            paintForearm3 = new Paint();
-            paintForearm3.setColor(Color.BLACK);
-            paintForearm3.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintForearm3.setStrokeWidth(20);
+//            paintForearm0 = new Paint();
+//            paintForearm0.setColor(Color.GREEN);
+//            paintForearm0.setStyle(Paint.Style.FILL_AND_STROKE);
+//            paintForearm0.setStrokeWidth(15);
+//
+//            paintForearm1 = new Paint();
+//            paintForearm1.setColor(Color.BLACK);
+//            paintForearm1.setStyle(Paint.Style.FILL_AND_STROKE);
+//            paintForearm1.setStrokeWidth(20);
+//
+//            paintForearm2 = new Paint();
+//            paintForearm2.setColor(Color.BLACK);
+//            paintForearm2.setStyle(Paint.Style.FILL_AND_STROKE);
+//            paintForearm2.setStrokeWidth(20);
+//
+//            paintForearm3 = new Paint();
+//            paintForearm3.setColor(Color.BLACK);
+//            paintForearm3.setStyle(Paint.Style.FILL_AND_STROKE);
+//            paintForearm3.setStrokeWidth(20);
 
 
             canvasBicep = new Canvas(bitmapBody);
             canvasTriceps = new Canvas(bitmapBody);
             canvasForearm = new Canvas(bitmapBody);
 
-            canvasForearm1 = new Canvas(bitmapBody);
-
-            canvasForearm2 = new Canvas(bitmapBody);
-
-            canvasForearm3 = new Canvas(bitmapBody);
+//            canvasForearm1 = new Canvas(bitmapBody);
+//
+//            canvasForearm2 = new Canvas(bitmapBody);
+//
+//            canvasForearm3 = new Canvas(bitmapBody);
             setImageBitmap(bitmapBody);
             invalidate();
         }
@@ -131,7 +135,7 @@ public class drawBody extends ImageView {
         canvasTriceps.drawLine(x,y,(x+160),y+350,paintTriceps);
 
 
-        canvasForearm.drawLine(x+240,y+355,x+550,y+400,paintForearm0);
+        canvasForearm.drawLine(x+240,y+355,x+550,y+400,paintForearm);
 
         //canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
 
@@ -157,19 +161,19 @@ public class drawBody extends ImageView {
         int x=width/3;
         int y=0;
 
-        paintForearm1 = new Paint();
-        paintForearm1.setColor(Color.BLACK);
-        paintForearm1.setStyle(Paint.Style.FILL_AND_STROKE);
-        paintForearm1.setStrokeWidth(0);
+//        paintForearm1 = new Paint();
+//        paintForearm1.setColor(Color.BLACK);
+//        paintForearm1.setStyle(Paint.Style.FILL_AND_STROKE);
+//        paintForearm1.setStrokeWidth(0);
 
         if(position==0){
 
 
-            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
-
-            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm1);
-
-            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm1);
+//            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
+//
+//            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm1);
+//
+//            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm1);
             canvasForearm.drawLine(x+240,y+355,x+550,y+400,paintForearm);
         }else if(position==1) {
 
@@ -177,24 +181,24 @@ public class drawBody extends ImageView {
             canvasForearm2.save();
             canvasForearm3.save();*/
 
-            canvasForearm.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
+            canvasForearm.drawLine(x+240,y+355,x+500,y+310,paintForearm);
 
-            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm1);
-
-            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm1);
-            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm);
+//            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm1);
+//
+//            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm1);
+//            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm);
         }else if(position==2) {
 
             /*canvasForearm1.save();
             canvasForearm.save();
             canvasForearm3.save();*/
 
-            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
+//            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
 
-            canvasForearm.drawLine(x+240,y+355,x+450,y+200,paintForearm1);
-
-            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm1);
-            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm);
+            canvasForearm.drawLine(x+240,y+355,x+450,y+200,paintForearm);
+//
+//            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm1);
+//            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm);
 
         }else if(position==3) {
 
@@ -202,14 +206,14 @@ public class drawBody extends ImageView {
             canvasForearm2.save();
             canvasForearm.save();*/
 
-            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
+//            canvasForearm1.drawLine(x+240,y+355,x+500,y+310,paintForearm1);
+//
+//            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm1);
 
-            canvasForearm2.drawLine(x+240,y+355,x+450,y+200,paintForearm1);
-
-            canvasForearm.drawLine(x+240,y+355,x+320,y+100,paintForearm1);
+            canvasForearm.drawLine(x+240,y+355,x+320,y+100,paintForearm);
 
 
-            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm);
+//            canvasForearm3.drawLine(x+240,y+355,x+320,y+100,paintForearm);
         }
 
         invalidate();
@@ -218,7 +222,6 @@ public class drawBody extends ImageView {
 
 
     public void setPaintBicep(boolean active) {
-//    public void setPaintBicep(){
         if(active) {
             ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintBicep,"color", new ArgbEvaluator(),  paintBicep.getColor() , Color.RED);
             colorFade.setInterpolator(new LinearInterpolator());
@@ -226,6 +229,19 @@ public class drawBody extends ImageView {
             AnimatorSet t = new AnimatorSet();
             t.play(colorFade);
             t.start();
+            canvasForearm.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            canvasForearm.save();
+//            Animation anim = new RotateAnimation(0f , -45f,forearm_x , forearm_y);
+//            anim.setInterpolator(new LinearInterpolator());
+//            anim.setDuration(4000);
+//            startAnimation(anim);
+
+            canvasForearm.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //clear everything drawn to the bitmap
+            canvasForearm.rotate(-45, forearm_x, forearm_y);
+//            canvasForearm.restore();
+
+
+
 //            paintBicep.setColor(Color.RED);
         }
         else {
@@ -235,6 +251,16 @@ public class drawBody extends ImageView {
             AnimatorSet t = new AnimatorSet();
             t.play(colorFade);
             t.start();
+            canvasForearm.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            canvasForearm.save();
+//            Animation anim = new RotateAnimation(0f , -45f,forearm_x , forearm_y);
+//            anim.setInterpolator(new LinearInterpolator());
+//            anim.setDuration(4000);
+//            startAnimation(anim);
+
+            canvasForearm.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //clear everything drawn to the bitmap
+            canvasForearm.rotate(45, forearm_x, forearm_y);
+//            canvasForearm.restore();
 //            paintBicep.setColor(Color.GREEN);
         }
 }

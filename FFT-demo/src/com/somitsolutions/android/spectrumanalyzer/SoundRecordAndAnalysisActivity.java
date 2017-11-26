@@ -118,10 +118,11 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	}
 
 	public void onClick(View v) {
-
+		boolean active;
 		if(v.equals(UpdateButton)) {
-			// Test color transition
-//			drawBody.setPaintBicep();
+			 //Test color transition
+			active = true;
+			drawBody.setPaintBicep(active);
 			recordTask.setCancel();
 
 			stringB = BicepTxt.getText().toString();
@@ -143,6 +144,8 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 			recordTask.execute();
 
 		}else if(v.equals(RECButton) ){
+			active = false;
+			drawBody.setPaintBicep(active);
 			if (shouldAskPermissions()) {
 				askPermissions();
 			}
