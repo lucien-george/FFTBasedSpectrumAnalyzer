@@ -230,9 +230,6 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		txtFreq.setLayoutParams(params);
 		txtFreq.setPadding(0,0,0,30);
 
-//		requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 
 		int imageResource;
 		imageViewDisplaySectrum = new ImageView(this);
@@ -268,13 +265,6 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		canvasBicep = new Canvas(bitmapDisplaySpectrum);
 		paintBicep = new Paint();
 		paintBicep.setColor(Color.GREEN);
-
-		/*
-		imageViewForearm.setImageBitmap(bitmapDisplaySpectrum);
-		canvasForearm = new Canvas(bitmapDisplaySpectrum);
-		paintForearm = new Paint();
-		paintForearm.setColor(Color.GREEN);
-	*/
 
 		imageViewDisplaySectrum.setImageBitmap(bitmapDisplaySpectrum);
 		imageViewDisplaySectrum.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -319,35 +309,6 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		txtFreq.addView(TricepsTxt);
 		txtFreq.addView(ForearmTxt);
 
-		//create ImageView for 3 muscles
-/*
-
-		String uri = "@drawable/bicep";
-		imageResource = getResources().getIdentifier(uri, null, getPackageName());
-		BICEP = ContextCompat.getDrawable(this, imageResource);
-		imageViewBicep.setImageDrawable(BICEP);
-		imageViewBicep.setLayoutParams((findViewById(R.id.imageView1)).getLayoutParams());
-
-		//imageViewTriceps= (ImageView)main.findViewById(R.id.imageView2);
-
-
-
-		uri = "@drawable/triceps";
-		imageResource = getResources().getIdentifier(uri, null, getPackageName());
-		TRICEPS = ContextCompat.getDrawable(this, imageResource);
-		imageViewTriceps.setImageDrawable(TRICEPS);
-		imageViewTriceps.setLayoutParams((findViewById(R.id.imageView2)).getLayoutParams());
-
-
-		//imageViewForearm= (ImageView)main.findViewById(R.id.imageView3);
-
-
-		uri = "@drawable/forearm";
-		imageResource = getResources().getIdentifier(uri, null, getPackageName());
-		FOREARM = ContextCompat.getDrawable(this, imageResource);
-		imageViewForearm.setImageDrawable(FOREARM);
-		imageViewForearm.setLayoutParams((findViewById(R.id.imageView3)).getLayoutParams());
-*/
 		bparts.addView(imageViewBicep);
 
 		//bparts.addView(imageViewForearm);
@@ -396,26 +357,14 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		main.addView(imageViewdrawBody);
 
 
-		/*
-		bodyScale = new BodyScale(this);
-		bodyScale.setLayoutParams(layoutParams_imageViewScale);
-		bodyScale.setId(View.NO_ID);
-		main.addView(bodyScale);
-		*/
-
 		bparts.removeView(imageViewBicep);
 
 		bparts.removeView(imageViewForearm);
 		bparts.removeView(imageViewTriceps);
 
-		//main.addView(bparts);
 
 
 		setContentView(main);
-
-
-		//recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay,
-		//		imageViewDisplaySectrum, bparts, imageViewBicep, imageViewTriceps, imageViewForearm, width, body, drawBody, imageViewdrawBody);
 
 
 		body = new body(BICEP_FRQ,TRICEPS_FRQ,FOREARM_FRQ, DIST_SENS_FRQ, BICEP,TRICEPS,FOREARM , Bicep_textColor, Triceps_textColor, Forearm_textColor /*,imageViewBicep, imageViewTriceps, imageViewForearm,

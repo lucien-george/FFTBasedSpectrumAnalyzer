@@ -131,38 +131,6 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		paintFreqLines_F.setStyle(Paint.Style.FILL_AND_STROKE);
 		paintFreqLines_F.setStrokeWidth(3);
 
-		//this.isRecording= isRecording;
-		//this.isReplaying= isReplaying;
-
-		/*
-		file= init_writeFile();
-
-		try {
-			if(!file.exists())
-				file.createNewFile();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			fOut = new FileOutputStream(file);
-			fIn = new FileInputStream(file);
-			myOutWriter = new OutputStreamWriter(fOut);
-			myInReader = new InputStreamReader(fIn);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-
-
-		try {
-			reader =  new BufferedReader(new FileReader(file));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		*/
 
 	}
 
@@ -708,52 +676,6 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 				t.start();
 				FwasActive=false;
 			}
-
-			/*
-			if(body.isDist_sensorActive){
-				drawBody.dRotate(-forearmDegreeIncrease);
-			}else
-				drawBody.dRotate(0);
-			*/
-
-			int x=drawBody.width/3;
-			int y=0;
-
-//			drawBody.paintForearm1.setColor(Color.BLACK);
-//
-//			if (av > 35){
-//				drawBody.paintForearm1.setColor(Color.BLACK);
-//
-//				drawBody.paintForearm0.setColor(Color.BLACK);
-//
-//				drawBody.paintForearm2.setColor(Color.BLACK);
-//				drawBody.paintForearm3.setColor(drawBody.paintForearm.getColor());
-//			}
-//			else if(av>25) {
-//				drawBody.paintForearm1.setColor(Color.BLACK);
-//
-//				drawBody.paintForearm0.setColor(Color.BLACK);
-//
-//				drawBody.paintForearm3.setColor(Color.BLACK);
-//				drawBody.paintForearm2.setColor(drawBody.paintForearm.getColor());
-//			}
-//			else if(av>15){
-//				drawBody.paintForearm1.setColor(drawBody.paintForearm.getColor());
-//
-//				drawBody.paintForearm0.setColor(Color.BLACK);
-//
-//				drawBody.paintForearm3.setColor(Color.BLACK);
-//				drawBody.paintForearm2.setColor(Color.BLACK);
-//			}
-//
-//			else if(av>5){
-//				drawBody.paintForearm1.setColor(Color.BLACK);
-//
-//				drawBody.paintForearm0.setColor(drawBody.paintForearm.getColor());
-//
-//				drawBody.paintForearm3.setColor(Color.BLACK);
-//				drawBody.paintForearm2.setColor(Color.BLACK);
-//			}
 
 
 

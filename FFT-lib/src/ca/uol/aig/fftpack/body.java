@@ -93,19 +93,6 @@ public class body {
         isForearmActive=false;
         isDist_sensorActive=false;
 
-
-    /*
-        this.paintBicep=paintBicep;
-        this.paintTriceps=paintTriceps;
-        this.paintForearm=paintForearm;
-
-        this.imageViewBicep=imageViewBicep;
-        this.imageViewForearm=imageViewForearm;
-        this.imageViewTriceps=imageViewTriceps;
-
-        this.height= height;
-        this.width= width;
-    */
         bicep_counter=0;
         triceps_counter=0;
         forearm_counter=0;
