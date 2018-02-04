@@ -40,9 +40,9 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	Button ReplayButton;
 	RecordTask recordTask;
 	body body;
-	int BICEP_FRQ=7000;
-	int TRICEPS_FRQ=10000;
-	int FOREARM_FRQ=16000;
+	int BICEP_FRQ= 100 /*7000*/;
+	int TRICEPS_FRQ= 1000/*10000*/;
+	int FOREARM_FRQ= 2000/*16000*/;
 	int DIST_SENS_FRQ=12000;
 	public int Bicep_textColor = Color.CYAN;
 	public int Triceps_textColor = Color.YELLOW;
@@ -50,7 +50,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	Drawable BICEP;
 	Drawable TRICEPS;
 	Drawable FOREARM;
-	ImageView imageViewDisplaySectrum;
+	ImageView imageViewDisplaySpectrum;
 	ImageView imageViewBody;
 	ImageView imageViewBicep;
 	ImageView imageViewTriceps;
@@ -99,8 +99,6 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		height = displayM.heightPixels;
 
 		setContentView(R.layout.main);
-
-
 	}
 
 	protected boolean shouldAskPermissions() {
@@ -118,11 +116,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	}
 
 	public void onClick(View v) {
-		boolean active;
 		if(v.equals(UpdateButton)) {
-			 //Test color transition
-			active = true;
-			drawBody.setPaintBicep(active);
 			recordTask.setCancel();
 
 			stringB = BicepTxt.getText().toString();
@@ -139,13 +133,11 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 				paintBicep,paintTriceps, paintForearm, width, height*/);
 
 			recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay,
-					imageViewDisplaySectrum, bparts,
+                    imageViewDisplaySpectrum, bparts,
 					imageViewBicep, imageViewTriceps, imageViewForearm, width, body, drawBody, imageViewdrawBody,isRecording,isReplaying);
 			recordTask.execute();
 
 		}else if(v.equals(RECButton) ){
-			active = false;
-			drawBody.setPaintBicep(active);
 			if (shouldAskPermissions()) {
 				askPermissions();
 			}
@@ -232,7 +224,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 
 
 		int imageResource;
-		imageViewDisplaySectrum = new ImageView(this);
+		imageViewDisplaySpectrum = new ImageView(this);
 		imageViewBicep= new ImageView(this);
 		imageViewTriceps= new ImageView(this);
 		imageViewForearm=new ImageView(this);
@@ -266,13 +258,13 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		paintBicep = new Paint();
 		paintBicep.setColor(Color.GREEN);
 
-		imageViewDisplaySectrum.setImageBitmap(bitmapDisplaySpectrum);
-		imageViewDisplaySectrum.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		imageViewDisplaySpectrum.setImageBitmap(bitmapDisplaySpectrum);
+		imageViewDisplaySpectrum.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		layoutParams_imageViewScale = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
-		imageViewDisplaySectrum.setId(View.NO_ID);
+		imageViewDisplaySpectrum.setId(View.NO_ID);
 
-		main.addView(imageViewDisplaySectrum);
+		main.addView(imageViewDisplaySpectrum);
 
 		//create text box for muscle freq input
 		BicepT.setLayoutParams((findViewById(R.id.BicepT)).getLayoutParams());
@@ -302,8 +294,6 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		BicepTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
 		TricepsTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
 		ForearmTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-
 
 		txtFreq.addView(BicepTxt);
 		txtFreq.addView(TricepsTxt);
@@ -370,7 +360,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		body = new body(BICEP_FRQ,TRICEPS_FRQ,FOREARM_FRQ, DIST_SENS_FRQ, BICEP,TRICEPS,FOREARM , Bicep_textColor, Triceps_textColor, Forearm_textColor /*,imageViewBicep, imageViewTriceps, imageViewForearm,
 				paintBicep,paintTriceps, paintForearm, width, height*/);
 		recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay,
-				imageViewDisplaySectrum, bparts, imageViewBicep, imageViewTriceps, imageViewForearm,
+                imageViewDisplaySpectrum, bparts, imageViewBicep, imageViewTriceps, imageViewForearm,
 				width, body, drawBody, imageViewdrawBody,isRecording,isReplaying);
 
 		recordTask.execute();
@@ -419,5 +409,4 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
-
 }

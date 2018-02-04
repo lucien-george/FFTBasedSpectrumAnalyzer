@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, SoundRecordAndAnalysisActivity!</string>
     <string name="app_name">ATeam</string>
+    <string name="title_activity_sound_record_analysis">SoundRecordAnalysisActivity</string>
 
 </resources>
