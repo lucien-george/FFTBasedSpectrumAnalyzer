@@ -12,7 +12,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.util.DisplayMetrics;
 
-public class ScaleImageView extends ImageView {
+public class HorizontalScaleImageView extends ImageView {
     Paint paintScaleDisplay;
     Bitmap bitmapScale;
     Canvas canvasScale;
@@ -21,15 +21,15 @@ public class ScaleImageView extends ImageView {
 
 
 
-    public ScaleImageView(Context context) {
+    public HorizontalScaleImageView(Context context) {
         super(context);
     }
 
-    public ScaleImageView(Context context, AttributeSet attrs) {
+    public HorizontalScaleImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ScaleImageView(Context context, AttributeSet attrs, int defStyle) {
+    public HorizontalScaleImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

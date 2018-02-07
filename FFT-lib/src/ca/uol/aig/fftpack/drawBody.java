@@ -122,17 +122,6 @@ public class drawBody extends ImageView {
         forearm_x=x+240;
     }
 
-//    public void dRotate(float degrees){
-//        canvasForearm.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-//        canvasForearm.save();
-//        canvasForearm.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); //clear everything drawn to the bitmap
-//        canvasForearm.rotate(degrees, forearm_x, forearm_y);
-//        canvasForearm.drawLine(forearm_x, forearm_y, forearm_x+330, forearm_y, paintForearm);
-//        canvasForearm.restore();
-//    }
-
-
-
     public void setPaintBicep(boolean active) {
         if(active) {
             paintBicep.setColor(Color.RED);

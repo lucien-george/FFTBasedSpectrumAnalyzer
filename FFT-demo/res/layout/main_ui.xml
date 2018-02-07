@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <ca.uol.aig.fftpack.view.ScaleImageView
+        <ca.uol.aig.fftpack.view.HorizontalScaleImageView
             android:id="@+id/scale"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
