@@ -66,6 +66,8 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
     private int max_col = 255;
     private int lim_min = 1;
     private int lim_max = 290;
+    private int high_magnitude = 150;
+    private int medium_magnitude = 75;
 
     public final static String IO_FILENAME=
 			"KISDataREC";
@@ -581,10 +583,10 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 			if (body.isBicepActive && !BwasActive) {
                 for(int i = 0 ; i < blockSize / 2 ; i++) {
-                	if(magnitude[i] >= 150) {
+                	if(magnitude[i] >= high_magnitude) {
                 	    drawBody.paintBicep.setColor(Color.RED);
                     }
-                    else if (magnitude[i] < 150 || magnitude[i] >= 75) {
+                    else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
                 	    drawBody.paintBicep.setColor(Color.rgb(255 , 165 , 0));
                     }
 //                    int max_magnitude = (int) getMaxMagnitude(magnitude);
@@ -602,10 +604,10 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 			if (body.isTricepsActive && !TwasActive){
                 for(int i = 0 ; i < blockSize / 2 ; i++) {
-                    if(magnitude[i] >= 150) {
+                    if(magnitude[i] >= high_magnitude) {
                         drawBody.paintTriceps.setColor(Color.RED);
                     }
-                    else if (magnitude[i] < 150 || magnitude[i] >= 75) {
+                    else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
                         drawBody.paintTriceps.setColor(Color.rgb(255 , 165 , 0));
                     }
 //                    int max_magnitude = (int) getMaxMagnitude(magnitude);
@@ -623,10 +625,10 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 			if (body.isForearmActive && !FwasActive) {
                 for(int i = 0 ; i < blockSize / 2 ; i++) {
-                    if(magnitude[i] >= 150) {
+                    if(magnitude[i] >= high_magnitude) {
                         drawBody.paintForearm.setColor(Color.RED);
                     }
-                    else if (magnitude[i] < 150 || magnitude[i] >= 75) {
+                    else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
                         drawBody.paintForearm.setColor(Color.rgb(255 , 165 , 0));
                     }
 //                    int max_magnitude = (int) getMaxMagnitude(magnitude);
