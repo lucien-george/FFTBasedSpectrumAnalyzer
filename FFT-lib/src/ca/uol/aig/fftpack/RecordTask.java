@@ -42,17 +42,9 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 
 	private final int width;
-	private final ImageView imageViewDisplaySpectrum;
-	private final ImageView imageViewBicep;
-	private final ImageView imageViewTriceps;
-	private final ImageView imageViewForearm;
+	private final ImageView imageViewDisplaySpectrum , imageViewBicep , imageViewTriceps , imageViewForearm;
 	private final Canvas canvasDisplaySpectrum;
-	private final Paint paintSpectrumDisplay;
-	private final Paint paintFreqLines_B;
-	private final Paint paintFreqLines_T;
-	private final Paint paintFreqLines_F;
-	private final Paint paintMinMagnitude;
-	private final Paint paintMaxMagnitude;
+	private final Paint paintSpectrumDisplay , paintFreqLines_B , paintFreqLines_T , paintFreqLines_F , paintMinMagnitude , paintMaxMagnitude;
 	private RelativeLayout bparts;
 	private RealDoubleFFT transformer;
 	private int blockSize = 256;
@@ -536,25 +528,26 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		int line_position_Forearm = Math.round((float)((double)body.FOREARM_FRQ/freqGap));
 
 		//if screen large is enough double the size
+        //TODO: if else inside for loop not the other way around
 		if (width > 512) {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = 4 * i;
-				downy = (int) (300 - (progress[0][i] * 10));
-				upy = 300;
+				downy = (int) (500 - (progress[0][i] * 10));
+				upy = 500;
 //				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
-                canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
+                canvasDisplaySpectrum.drawLine(x, downy, x, upy , paintSpectrumDisplay);
 			}
 			canvasDisplaySpectrum.drawLine(line_position_Bicep*4, 0, line_position_Bicep*4, upy, paintFreqLines_B);
 			canvasDisplaySpectrum.drawLine(line_position_Triceps*4, 0, line_position_Triceps*4, upy, paintFreqLines_T);
 			canvasDisplaySpectrum.drawLine(line_position_Forearm*4, 0, line_position_Forearm*4, upy, paintFreqLines_F);
-			canvasDisplaySpectrum.drawLine(0 , lim_min , width , lim_min , paintMinMagnitude);
-			canvasDisplaySpectrum.drawLine(0 , lim_max , width , lim_max , paintMaxMagnitude);
+			canvasDisplaySpectrum.drawLine(0 , 500 - lim_min , width , 500 - lim_min , paintMinMagnitude);
+			canvasDisplaySpectrum.drawLine(0 , 500 - lim_max , width , 500 - lim_max , paintMaxMagnitude);
 			imageViewDisplaySpectrum.invalidate();
 		} else {
 			for (int i = 0; i < progress[0].length; i++) {
 				int x = i;
-				downy = (int) (150 - (Math.abs(progress[0][i]) * 10));
-				upy = 150;
+				downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
+				upy = 250;
 //				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}

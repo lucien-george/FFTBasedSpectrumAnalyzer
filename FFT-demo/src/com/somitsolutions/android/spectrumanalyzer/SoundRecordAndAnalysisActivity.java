@@ -35,80 +35,48 @@ import ca.uol.aig.fftpack.body;
 
 public class SoundRecordAndAnalysisActivity extends Activity implements OnClickListener {
 
-	Button UpdateButton;
-	Button RECButton;
-	Button ReplayButton;
-	RecordTask recordTask;
-	body body;
-	int BICEP_FRQ= 100 /*7000*/;
-	int TRICEPS_FRQ= 1000/*10000*/;
-	int FOREARM_FRQ= 2000/*16000*/;
+	Button UpdateButton; //button updating frequencies for each muscle
+	Button RECButton; // start recording button
+	Button ReplayButton; // replay saved movement button
+	RecordTask recordTask; //recordTask instantiated
+	body body; // body object instantiated
+	int BICEP_FRQ= 100 /*7000*/; // bicep frequency
+	int TRICEPS_FRQ= 1000/*10000*/; // tricep frequency
+	int FOREARM_FRQ= 2000/*16000*/; // forearm frequency
 	int DIST_SENS_FRQ=12000;
-	public int Bicep_textColor = Color.CYAN;
-	public int Triceps_textColor = Color.YELLOW;
-	public int Forearm_textColor = Color.MAGENTA;
-	Drawable BICEP;
-	Drawable TRICEPS;
-	Drawable FOREARM;
-	ImageView imageViewDisplaySpectrum;
-	ImageView imageViewBody;
-	ImageView imageViewBicep;
-	ImageView imageViewTriceps;
-	ImageView imageViewForearm;
-	EditText BicepTxt;
-	String stringB;
-	String stringT;
-	String stringF;
-	EditText TricepsTxt;
-	EditText ForearmTxt;
-	TextView BicepT;
-	TextView TricepsT;
-	TextView ForearmT;
+	public int Bicep_textColor = Color.CYAN , Triceps_textColor = Color.YELLOW , Forearm_textColor = Color.MAGENTA; // text color
+	Drawable BICEP , TRICEPS , FOREARM;
+	ImageView imageViewDisplaySpectrum , imageViewBody , imageViewBicep , imageViewTriceps , imageViewForearm , imageViewdrawBody;
+	EditText BicepTxt ,	 TricepsTxt , ForearmTxt; //text fields for frequencies
+	String stringB , stringT , stringF;
+	TextView BicepT , TricepsT , ForearmT;
 	HorizontalScaleImageView horizontalImageViewScale;
 	Bitmap bitmapDisplaySpectrum;
-	Canvas canvasDisplaySpectrum;
-	Canvas canvasBicep;
-	Canvas canvasTriceps;
-	Canvas canvasForearm;
-	Paint paintSpectrumDisplay;
-	Paint paintBicep;
-	Paint paintTriceps;
-	Paint paintForearm;
-	LinearLayout main;
-	RelativeLayout bparts;
-	RelativeLayout txtFreq;
-	RelativeLayout txt;
-	int width;
-	int height;
-	DisplayMetrics displayM;
-	ImageView imageViewdrawBody;
-	drawBody drawBody;
-	public static boolean isRecording=false;
-	public static boolean isReplaying=false;
-	public static boolean recorded =false;
-	public static boolean replayed =false;
+	Canvas canvasDisplaySpectrum , canvasBicep , canvasTriceps , canvasForearm; // canvas for each muscle
+	Paint paintSpectrumDisplay , paintBicep , paintTriceps , paintForearm;
+	LinearLayout main; // main layout
+	RelativeLayout bparts , txtFreq , txt; // relative layouts
+	int width , height; // width & height of screen
+	DisplayMetrics displayM; // get height and widths of screen
+	drawBody drawBody; // draw body instantiated
+	public static boolean isRecording=false , isReplaying=false , recorded =false , replayed =false;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) { // whenever app is running
 		super.onCreate(savedInstanceState);
-		//Display display = getWindowManager().getDefaultDisplay();
 
-		displayM = this.getResources().getDisplayMetrics();
-
-		//screen width
-		width = displayM.widthPixels;
-		//screen height
-		height = displayM.heightPixels;
-
-		setContentView(R.layout.main);
+		displayM = this.getResources().getDisplayMetrics(); // get screen width and height
+		width = displayM.widthPixels; //screen width
+		height = displayM.heightPixels; //screen height
+		setContentView(R.layout.main); // call layout used for activity
 	}
 
-	protected boolean shouldAskPermissions() {
+	protected boolean shouldAskPermissions() { // check that the device runs on Lollipop_MR1 or higher
 		return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
 	}
 
 	@SuppressLint("NewApi")
-	protected void askPermissions() {
+	protected void askPermissions() { // asks permissions to read and write external storage
 		String[] permissions = {
 				"android.permission.READ_EXTERNAL_STORAGE",
 				"android.permission.WRITE_EXTERNAL_STORAGE"
@@ -117,46 +85,41 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		requestPermissions(permissions, requestCode);
 	}
 
-	public void onClick(View v) {
-		if(v.equals(UpdateButton)) {
-			recordTask.setCancel();
+	public void onClick(View v) { // takes care of button clicks
+		if(v.equals(UpdateButton)) { // if click on updateButton is detected
+			recordTask.setCancel(); // cancel recordTask
 
-			stringB = BicepTxt.getText().toString();
-			stringT = TricepsTxt.getText().toString();
-			stringF = ForearmTxt.getText().toString();
+			stringB = BicepTxt.getText().toString(); stringT = TricepsTxt.getText().toString(); stringF = ForearmTxt.getText().toString(); // gets the values entered for the frequencies
 
-			if (!(TextUtils.isEmpty(stringB)))
+			if (!(TextUtils.isEmpty(stringB))) // if the field is not empty parse it
 				BICEP_FRQ = Integer.parseInt(stringB);
 			if (!(TextUtils.isEmpty(stringT)))
-				TRICEPS_FRQ = Integer.parseInt(stringT);
+				TRICEPS_FRQ = Integer.parseInt(stringT); // if the field is not empty parse it
 			if (!(TextUtils.isEmpty(stringF)))
-				FOREARM_FRQ = Integer.parseInt(stringF);
-			body = new body(BICEP_FRQ, TRICEPS_FRQ, FOREARM_FRQ, DIST_SENS_FRQ, BICEP, TRICEPS, FOREARM, Bicep_textColor, Triceps_textColor, Forearm_textColor /*,imageViewBicep, imageViewTriceps, imageViewForearm,
-				paintBicep,paintTriceps, paintForearm, width, height*/);
+				FOREARM_FRQ = Integer.parseInt(stringF); // if the field is not empty parse it
+			body = new body(BICEP_FRQ, TRICEPS_FRQ, FOREARM_FRQ, DIST_SENS_FRQ, BICEP, TRICEPS, FOREARM, Bicep_textColor, Triceps_textColor, Forearm_textColor); //constructor
 
-			recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay,
-                    imageViewDisplaySpectrum, bparts,
-					imageViewBicep, imageViewTriceps, imageViewForearm, width, body, drawBody, imageViewdrawBody,isRecording,isReplaying);
-			recordTask.execute();
+			recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay, imageViewDisplaySpectrum, bparts, imageViewBicep, imageViewTriceps, imageViewForearm, width, body, drawBody, imageViewdrawBody,isRecording,isReplaying); // constructor
+			recordTask.execute(); // execute record task
 
-		}else if(v.equals(RECButton) ){
-			if (shouldAskPermissions()) {
-				askPermissions();
+		}else if(v.equals(RECButton) ){ //if click detected on record button
+			if (shouldAskPermissions()) { // check OS version
+				askPermissions(); // ask permission to read and write external storage
 			}
 
-			if(recordTask.isRecording) {
+			if(recordTask.isRecording) { // if task is recording
 				try {
 					recordTask.myOutWriter.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				isRecording = false;
-				RECButton.setText("Start Recording");
+				isRecording = false; // boolean set to false
+				RECButton.setText("Start Recording"); // button text updated
 
 			}
 
 
-			if(recordTask.isReplaying){
+			if(recordTask.isReplaying){ // if task is being replayed
 				try {
 
 					recordTask.myInReader.close();
@@ -165,203 +128,153 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 				}
 			}
 
-			recordTask.isRecording=true;
-			recordTask.isReplaying=false;
-			RECButton.setText("Stop Recording");
+			recordTask.isRecording=true; // boolean set to true
+			recordTask.isReplaying=false; // boolean set to false
+			RECButton.setText("Stop Recording"); // button text updated
 
-		}else if(v.equals(ReplayButton) ) {
+		}else if(v.equals(ReplayButton) ) { // if click on replay button is detected
 
 
-			if(recordTask.isRecording) {
+			if(recordTask.isRecording) { // if task is recording
 				try {
 					recordTask.myOutWriter.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				isRecording = false;
-				RECButton.setText("Start Recording");
+				isRecording = false; // set boolean to false
+				RECButton.setText("Start Recording"); // button text updated
 
 			}
 
-			if(recordTask.isReplaying){
+			if(recordTask.isReplaying){ // if task is being replayed
 				try {
 					recordTask.myInReader.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				replayed = false;
-				ReplayButton.setText("Start Replaying");
-				isReplaying = false;
+				replayed = false; // boolean set to false
+				ReplayButton.setText("Start Replaying"); // button text updated
+				isReplaying = false; // boolean set to false
 			}
-			recordTask.isRecording = false;
-			recordTask.isReplaying = true;
-			ReplayButton.setText("Stop Replay");
+			recordTask.isRecording = false; // boolean set to false
+			recordTask.isReplaying = true; // boolean set to true
+			ReplayButton.setText("Stop Replay"); // button text updated
 		}
 	}
 
 	@Override
-	public void onStart() {
+	public void onStart() { // when app is launched
 		super.onStart();
 
-		main = new LinearLayout(this);
-		main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
-		main.setOrientation(LinearLayout.VERTICAL);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		bparts= new RelativeLayout(this);
-		txtFreq= new RelativeLayout(this);
-		txt = new RelativeLayout(this);
+		main = new LinearLayout(this); // initializing linear layout
+		main.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT)); // setting parameters widths and height
+		main.setOrientation(LinearLayout.VERTICAL); // setting orientation to vertical
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // set orientation to portrait everytime the app launches
+		bparts= new RelativeLayout(this) ; txtFreq= new RelativeLayout(this) ; txt = new RelativeLayout(this); // initializing relative layout
 
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-		bparts.setLayoutParams(params);
-		txt.setLayoutParams(params);
-		txtFreq.setLayoutParams(params);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT); // set width and height
+		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE); // align to the bottom of parent layout
+		bparts.setLayoutParams(params); txt.setLayoutParams(params); txtFreq.setLayoutParams(params); // set layout
 		txtFreq.setPadding(0,0,0,30);
 
-		int imageResource;
-		imageViewDisplaySpectrum = new ImageView(this);
-		imageViewBicep= new ImageView(this);
-		imageViewTriceps= new ImageView(this);
-		imageViewForearm=new ImageView(this);
+		imageViewDisplaySpectrum = new ImageView(this) ; imageViewBicep= new ImageView(this) ; imageViewTriceps= new ImageView(this) ; imageViewForearm=new ImageView(this); // ImageView initialized
 
-		BicepT = new TextView(this);
-		TricepsT = new TextView(this);
-		ForearmT = new TextView(this);
+		BicepT = new TextView(this) ; TricepsT = new TextView(this) ; ForearmT = new TextView(this); // TextViews initialized
 
-		BicepTxt= new EditText(this);
-		TricepsTxt= new EditText(this);
-		ForearmTxt= new EditText(this);
+		BicepTxt= new EditText(this) ; TricepsTxt= new EditText(this) ; ForearmTxt= new EditText(this); // TextViews initialized
 
 		// Frequency spectrum is displayed
-		bitmapDisplaySpectrum = Bitmap.createBitmap(width, 300, Bitmap.Config.ARGB_8888); //Creating spectrum with specific dimensions
+		bitmapDisplaySpectrum = Bitmap.createBitmap(width, 500, Bitmap.Config.ARGB_8888); //Creating spectrum with specific dimensions
 		LinearLayout.LayoutParams layoutParams_imageViewScale;
 		canvasDisplaySpectrum = new Canvas(bitmapDisplaySpectrum);
 		paintSpectrumDisplay = new Paint();
 		paintSpectrumDisplay.setColor(Color.GREEN); //color of the spectrum
 
-		imageViewTriceps.setImageBitmap(bitmapDisplaySpectrum);
-		canvasTriceps = new Canvas(bitmapDisplaySpectrum);
-		paintTriceps = new Paint();
-		paintTriceps.setColor(Color.GREEN);
 
-		imageViewBicep.setImageBitmap(bitmapDisplaySpectrum);
-		canvasBicep = new Canvas(bitmapDisplaySpectrum);
-		paintBicep = new Paint();
-		paintBicep.setColor(Color.GREEN);
+		imageViewTriceps.setImageBitmap(bitmapDisplaySpectrum); // sets bitmap as content of this image view
+		canvasTriceps = new Canvas(bitmapDisplaySpectrum); // initializing canvas
+		paintTriceps = new Paint(); // initializing paint
+		paintTriceps.setColor(Color.GREEN); // set paint color to green
 
-		imageViewDisplaySpectrum.setImageBitmap(bitmapDisplaySpectrum);
-		imageViewDisplaySpectrum.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		layoutParams_imageViewScale = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		imageViewBicep.setImageBitmap(bitmapDisplaySpectrum); // sets bitmap as content of this image view
+		canvasBicep = new Canvas(bitmapDisplaySpectrum); // initializing canvas
+		paintBicep = new Paint(); // initializing paint
+		paintBicep.setColor(Color.GREEN); // set paint color to green
 
-		imageViewDisplaySpectrum.setId(View.NO_ID);
+		imageViewDisplaySpectrum.setImageBitmap(bitmapDisplaySpectrum); // set bitmap as content of this image view
+		imageViewDisplaySpectrum.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)); // set width and height
+		layoutParams_imageViewScale = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT); // create new layout parameters
 
-		main.addView(imageViewDisplaySpectrum);
+		imageViewDisplaySpectrum.setId(View.NO_ID); // image view has no ID
 
-		// Create text box for muscle freq input
-        // Muscles Image View for the EditText
-		BicepT.setLayoutParams((findViewById(R.id.BicepT)).getLayoutParams());
-		TricepsT.setLayoutParams((findViewById(R.id.TricepsT)).getLayoutParams());
-		ForearmT.setLayoutParams((findViewById(R.id.ForarmT)).getLayoutParams());
-		BicepT.setText("Bicep");
-		TricepsT.setText("Triceps");
-		ForearmT.setText("Forearm");
-		BicepT.setTextColor(Color.CYAN);
-		TricepsT.setTextColor(Color.YELLOW);
-		ForearmT.setTextColor(Color.MAGENTA);
+		main.addView(imageViewDisplaySpectrum); // add the image view to the main layout
 
-		// Display textviews Bicep, Tricep, Forearm
-		txt.addView(BicepT);
-		txt.addView(TricepsT);
-		txt.addView(ForearmT);
+		BicepT.setLayoutParams((findViewById(R.id.BicepT)).getLayoutParams()) ; TricepsT.setLayoutParams((findViewById(R.id.TricepsT)).getLayoutParams()) ; ForearmT.setLayoutParams((findViewById(R.id.ForarmT)).getLayoutParams()); // set parameters for text views
+		BicepT.setText("Bicep" ); TricepsT.setText("Triceps") ; ForearmT.setText("Forearm"); // set texts for text views
+		BicepT.setTextColor(Color.CYAN) ; TricepsT.setTextColor(Color.YELLOW) ; ForearmT.setTextColor(Color.MAGENTA); // set color for text views
 
-		// Create edittexts input for each muscle
-		BicepTxt.setLayoutParams((findViewById(R.id.BicepTxt)).getLayoutParams());
-		TricepsTxt.setLayoutParams((findViewById(R.id.TricepsTxt)).getLayoutParams());
-		ForearmTxt.setLayoutParams((findViewById(R.id.ForarmTxt)).getLayoutParams());
-		BicepTxt.setHint("insert Frq(Hz)");
-		TricepsTxt.setHint("insert Frq(Hz)");
-		ForearmTxt.setHint("insert Frq(Hz)");
-		BicepTxt.setHintTextColor(Color.LTGRAY);
-		TricepsTxt.setHintTextColor(Color.LTGRAY);
-		ForearmTxt.setHintTextColor(Color.LTGRAY);
-		BicepTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
-		TricepsTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
-		ForearmTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+		txt.addView(BicepT) ; txt.addView(TricepsT) ; txt.addView(ForearmT); // add text views to layout txt
 
-		// Display edittexts
-		txtFreq.addView(BicepTxt);
-		txtFreq.addView(TricepsTxt);
-		txtFreq.addView(ForearmTxt);
+		BicepTxt.setLayoutParams((findViewById(R.id.BicepTxt)).getLayoutParams()) ; TricepsTxt.setLayoutParams((findViewById(R.id.TricepsTxt)).getLayoutParams()) ; ForearmTxt.setLayoutParams((findViewById(R.id.ForarmTxt)).getLayoutParams()); // set parameters for edit texts
+		BicepTxt.setHint("insert Frq(Hz)") ; TricepsTxt.setHint("insert Frq(Hz)") ; ForearmTxt.setHint("insert Frq(Hz)"); // set hint in text views
+		BicepTxt.setHintTextColor(Color.LTGRAY) ; TricepsTxt.setHintTextColor(Color.LTGRAY) ; ForearmTxt.setHintTextColor(Color.LTGRAY); // set color of hints
+		BicepTxt.setInputType(InputType.TYPE_CLASS_NUMBER) ; TricepsTxt.setInputType(InputType.TYPE_CLASS_NUMBER) ; ForearmTxt.setInputType(InputType.TYPE_CLASS_NUMBER); // set input type as numbers
 
-		bparts.addView(imageViewBicep);
+		txtFreq.addView(BicepTxt); txtFreq.addView(TricepsTxt); txtFreq.addView(ForearmTxt); // add edit texts to layout txtFreq
 
-		//bparts.addView(imageViewForearm);
-		bparts.addView(imageViewTriceps);
+		bparts.addView(imageViewBicep); bparts.addView(imageViewTriceps); // add image view bicep and triceps to layout bparts
 
-		// Horizontal Scale
-		horizontalImageViewScale = new HorizontalScaleImageView(this);
-		horizontalImageViewScale.setLayoutParams(layoutParams_imageViewScale);
-		horizontalImageViewScale.setId(View.NO_ID);
-//		horizontalImageViewScale.setPadding(0,0,0,20);
-		main.addView(horizontalImageViewScale);
+		horizontalImageViewScale = new HorizontalScaleImageView(this); // create new scale under spectrum
+		horizontalImageViewScale.setLayoutParams(layoutParams_imageViewScale); // set parameters for scale
+		horizontalImageViewScale.setId(View.NO_ID); // scale has no ID
 
-		main.addView(txt);
-		main.addView(txtFreq);
+		main.addView(horizontalImageViewScale); // add scale to main layout
+		main.addView(txt) ; main.addView(txtFreq); // add the relative layouts to the main layout
+
 		//Button
-		UpdateButton = new Button(this);
-		UpdateButton.setText("Update freq");
-		UpdateButton.setOnClickListener(this);
-		UpdateButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		UpdateButton = new Button(this); // create new update button
+		UpdateButton.setText("Update freq"); // set text of update button
+		UpdateButton.setOnClickListener(this); // set a click listener
+		UpdateButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)); // set width and height
 
-		RECButton = new Button(this);
-		RECButton.setText("Start Recording");
-		RECButton.setOnClickListener(this);
-		RECButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		RECButton = new Button(this); // create new record button
+		RECButton.setText("Start Recording"); // set text of record button
+		RECButton.setOnClickListener(this); // set a click listener
+		RECButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)); // set width and height
 
-		ReplayButton = new Button(this);
-		ReplayButton.setText("Replay Records");
-		ReplayButton.setOnClickListener(this);
-		ReplayButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		ReplayButton = new Button(this); // set new replay button
+		ReplayButton.setText("Replay Records"); // set text for replay button
+		ReplayButton.setOnClickListener(this); // set a click listener
+		ReplayButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)); // set width and height
 
-		main.addView(UpdateButton);
-		main.addView(RECButton);
-		main.addView(ReplayButton);
+		main.addView(UpdateButton) ; main.addView(RECButton) ; main.addView(ReplayButton); // add buttons to main layout
 
-		drawBody=new drawBody(this);
-		imageViewdrawBody = drawBody;
-		imageViewdrawBody.setLayoutParams(layoutParams_imageViewScale);
+		drawBody=new drawBody(this); // initialize drawbody
+		imageViewdrawBody = drawBody; // set image view equal to drawbody
+		imageViewdrawBody.setLayoutParams(layoutParams_imageViewScale); // set width and height
 
-		//converting dp in pixel
-		float scale = getResources().getDisplayMetrics().density;
-		int dpAsPixels = (int) (50*scale + 0.5f);
+		float scale = getResources().getDisplayMetrics().density; // gets density of display
+		int dpAsPixels = (int) (50*scale + 0.5f); // convert dps to pixels
 
-		imageViewdrawBody.setPadding(0,dpAsPixels,0,0);
-		imageViewdrawBody.setId(View.NO_ID);
-		main.addView(imageViewdrawBody);
+		imageViewdrawBody.setPadding(0,dpAsPixels,0,0); // set padding
+		imageViewdrawBody.setId(View.NO_ID); // image view has no id
+		main.addView(imageViewdrawBody); // add image view to main layout
 
-
-		bparts.removeView(imageViewBicep);
-
-		bparts.removeView(imageViewForearm);
-		bparts.removeView(imageViewTriceps);
+		bparts.removeView(imageViewBicep) ; bparts.removeView(imageViewForearm) ; bparts.removeView(imageViewTriceps); // remvoe views from layout bparts
 
 		setContentView(main);
 
-		body = new body(BICEP_FRQ,TRICEPS_FRQ,FOREARM_FRQ, DIST_SENS_FRQ, BICEP,TRICEPS,FOREARM , Bicep_textColor, Triceps_textColor, Forearm_textColor /*,imageViewBicep, imageViewTriceps, imageViewForearm,
-				paintBicep,paintTriceps, paintForearm, width, height*/);
-		recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay,
-                imageViewDisplaySpectrum, bparts, imageViewBicep, imageViewTriceps, imageViewForearm,
-				width, body, drawBody, imageViewdrawBody,isRecording,isReplaying);
-
+		body = new body(BICEP_FRQ,TRICEPS_FRQ,FOREARM_FRQ, DIST_SENS_FRQ, BICEP,TRICEPS,FOREARM , Bicep_textColor, Triceps_textColor, Forearm_textColor);
+		recordTask = new RecordTask(canvasDisplaySpectrum, paintSpectrumDisplay, imageViewDisplaySpectrum, bparts, imageViewBicep, imageViewTriceps, imageViewForearm, width, body, drawBody, imageViewdrawBody,isRecording,isReplaying);
 		recordTask.execute();
 	}
 
 	@Override
-	public void onBackPressed() {
+	public void onBackPressed() { // when back button is pressed
 		try {
-			if (recordTask.isStarted()) {
-				recordTask.setCancel();
-				UpdateButton.setText("Start");
+			if (recordTask.isStarted()) { // if recording has started
+				recordTask.setCancel(); // cancel recording
+				UpdateButton.setText("Start"); // change text of update button
 			} else {
 				super.onBackPressed();
 			}
@@ -369,33 +282,33 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 			Log.e("Stop failed", e.toString());
 
 		}
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_HOME);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
+		Intent intent = new Intent(Intent.ACTION_MAIN); // initialize intent
+		intent.addCategory(Intent.CATEGORY_HOME); // first activity that is displayed when app boots
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this activity will become the start of a new task on this history stack
+		startActivity(intent); // start new activity
 	}
 
 	@Override
-	public void onStop() {
+	public void onStop() { // when app stops
 		super.onStop();
-		if (recordTask != null) {
-			recordTask.cancel(true);
+		if (recordTask != null) { // if recordTask is not null
+			recordTask.cancel(true); // cancel recording
 		}
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_HOME);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
+		Intent intent = new Intent(Intent.ACTION_MAIN); // initialize intent
+		intent.addCategory(Intent.CATEGORY_HOME); // first activity that is displayed when app boots
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this activity will become the start of a new task on this history stack
+		startActivity(intent); // start new activity
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy() { // when app crashes?
 		super.onDestroy();
-		if (recordTask != null) {
-			recordTask.cancel(true);
+		if (recordTask != null) { // if recordTask is not null
+			recordTask.cancel(true); // cancel recording
 		}
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_HOME);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
+		Intent intent = new Intent(Intent.ACTION_MAIN); // initialize intent
+		intent.addCategory(Intent.CATEGORY_HOME); // first activity that is displayed when app boots
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this activity will become the start of a new task on this history stack
+		startActivity(intent); // start new activity
 	}
 }
