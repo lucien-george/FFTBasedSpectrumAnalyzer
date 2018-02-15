@@ -44,6 +44,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	int TRICEPS_FRQ= 1000/*10000*/; // tricep frequency
 	int FOREARM_FRQ= 2000/*16000*/; // forearm frequency
 	int DIST_SENS_FRQ=12000;
+	int bitmap_height = 500;
 	public int Bicep_textColor = Color.CYAN , Triceps_textColor = Color.YELLOW , Forearm_textColor = Color.MAGENTA; // text color
 	Drawable BICEP , TRICEPS , FOREARM;
 	ImageView imageViewDisplaySpectrum , imageViewBody , imageViewBicep , imageViewTriceps , imageViewForearm , imageViewdrawBody;
@@ -184,7 +185,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		BicepTxt= new EditText(this) ; TricepsTxt= new EditText(this) ; ForearmTxt= new EditText(this); // TextViews initialized
 
 		// Frequency spectrum is displayed
-		bitmapDisplaySpectrum = Bitmap.createBitmap(width, 500, Bitmap.Config.ARGB_8888); //Creating spectrum with specific dimensions
+		bitmapDisplaySpectrum = Bitmap.createBitmap(width, bitmap_height, Bitmap.Config.ARGB_8888); //Creating spectrum with specific dimensions
 		LinearLayout.LayoutParams layoutParams_imageViewScale;
 		canvasDisplaySpectrum = new Canvas(bitmapDisplaySpectrum);
 		paintSpectrumDisplay = new Paint();
