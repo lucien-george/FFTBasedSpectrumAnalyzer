@@ -56,9 +56,9 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 	private double[] im; // imaginary part
 	private double[] magnitude; // magnitude
 	private double[] frequency; // frequency
-    private int max_col = 255 , lim_min = 500 - 1 , lim_max = 500 - 290 , high_magnitude = 150 , medium_magnitude = 75 , blockSize = 256 , sampleRate =42000 , origin = 0 , muscles_counterThreshold=1;
+	private int max_col = 255 , lim_min = 500 - 1 , lim_max = 500 - 290 , high_magnitude = 150 , medium_magnitude = 75 , blockSize = 256 , sampleRate =42000 , origin = 0 , muscles_counterThreshold=1;
 
-    public final static String IO_FILENAME= "KISDataREC";
+	public final static String IO_FILENAME= "KISDataREC";
 	public static FileOutputStream fOut;
 	public static FileInputStream fIn;
 	public static File file;
@@ -114,10 +114,10 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		paintMinMagnitude.setStyle(Paint.Style.STROKE); // setting style
 		paintMinMagnitude.setStrokeWidth(3); // setting width
 
-        paintMaxMagnitude = new Paint(); // initializing paint
-        paintMaxMagnitude.setColor(Color.RED); // setting a color to the maximum magnitude line
-        paintMaxMagnitude.setStyle(Paint.Style.STROKE); // setting style
-        paintMaxMagnitude.setStrokeWidth(3); // setting width
+		paintMaxMagnitude = new Paint(); // initializing paint
+		paintMaxMagnitude.setColor(Color.RED); // setting a color to the maximum magnitude line
+		paintMaxMagnitude.setStyle(Paint.Style.STROKE); // setting style
+		paintMaxMagnitude.setStrokeWidth(3); // setting width
 
 
 	}
@@ -142,11 +142,11 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			e.printStackTrace();
 		}
 		try {
-				fOut = new FileOutputStream(file); // output file
-				myOutWriter = new OutputStreamWriter(fOut); // output writer?
+			fOut = new FileOutputStream(file); // output file
+			myOutWriter = new OutputStreamWriter(fOut); // output writer?
 
-				fIn = new FileInputStream(file); // input file
-				myInReader = new InputStreamReader(fIn); // input reader?
+			fIn = new FileInputStream(file); // input file
+			myInReader = new InputStreamReader(fIn); // input reader?
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -168,93 +168,93 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		}
 
 		while (started) {
-				if (isCancelled() || (CANCELLED_FLAG)) { // if record is cancelled
-					started = false; // then started is false
-					Log.d("doInBackground", "Cancelling the RecordTask");
-					break;
-				} else {
-					if(!isReplaying) {
+			if (isCancelled() || (CANCELLED_FLAG)) { // if record is cancelled
+				started = false; // then started is false
+				Log.d("doInBackground", "Cancelling the RecordTask");
+				break;
+			} else {
+				if(!isReplaying) {
 					/* Reads the data from the microphone. it takes in data
 					 * to the size of the window "blockSize". The data is then
 					 * given in to audioRecord. The int returned is the number
 					 * of bytes that were read*/
-						read = audioRecord.read(buffer, 0, blockSize);
-						Log.v("Read ", Integer.toString(read));
-						if (isRecording) { // if is recording
-							ByteBuffer.wrap(buff).asShortBuffer().put(buffer); // write to buffer?
-							wasRecording = true;
-							try {
-
-								if (total + read > 4294967295L) { // Write as many bytes as we can before hitting the max size
-									for (int i = 0; i < read && total <= 4294967295L; i++, total++) {
-										fOut.write(buff[i]);
-									}
-									isRecording = false; // is recording is false because file limit is reached
-									Log.v("File ", "hit file limit");
-								} else {
-									fOut.write(buff, 0, read); // Write out the entire read buffer
-								}
-								total += read;
-
-							} catch (IOException ex) {
-							} finally { //return new Object[]{ex};
-								if (!isRecording && wasRecording && fOut != null)
-									try {
-										fOut.close();
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-							}
-						}
-					}else if(isReplaying) {
-						SystemClock.sleep(75);
+					read = audioRecord.read(buffer, 0, blockSize);
+					Log.v("Read ", Integer.toString(read));
+					if (isRecording) { // if is recording
+						ByteBuffer.wrap(buff).asShortBuffer().put(buffer); // write to buffer?
+						wasRecording = true;
 						try {
-							fIn = new FileInputStream(file);
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						}
-						try {
-							if (total <= buff.length) { //if short record
-								fIn.read(buff, 0, (int) total);
-								read = (int) total;
-								isReplaying = false;
-							} else { //if long record
-								if (counter < 10) {
-									fIn.read(buff, counter * buff.length, buff.length);
-									counter++;
-								}else
-								if (counter == blockSize-1) {
-									fIn.read(buff, counter * buff.length, (int) (total - buff.length * counter));
-									counter = 0;
-									isReplaying = false;
+
+							if (total + read > 4294967295L) { // Write as many bytes as we can before hitting the max size
+								for (int i = 0; i < read && total <= 4294967295L; i++, total++) {
+									fOut.write(buff[i]);
 								}
-								read = blockSize;
+								isRecording = false; // is recording is false because file limit is reached
+								Log.v("File ", "hit file limit");
+							} else {
+								fOut.write(buff, 0, read); // Write out the entire read buffer
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}finally {
-							if (!isReplaying && wasRepaying && fIn != null)
+							total += read;
+
+						} catch (IOException ex) {
+						} finally { //return new Object[]{ex};
+							if (!isRecording && wasRecording && fOut != null)
 								try {
-									fIn.close();
+									fOut.close();
 								} catch (IOException e) {
 									e.printStackTrace();
 								}
 						}
-						ByteBuffer.wrap(buff).asShortBuffer().get(buffer);
 					}
-
-					// Read in the data from the mic to the array
-					for (int i = 0; i < blockSize && i < read; i++) {
-						//Since the range of toTransform[i] is [-1,1), re-scale it
-						//such that its base is 0 instead of -1
-						toTransform[i] = (buffer[i] / 32768.0); // signed 16 bit
+				}else if(isReplaying) {
+					SystemClock.sleep(75);
+					try {
+						fIn = new FileInputStream(file);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
 					}
-
-					//Forwards Fourier Transforms toTransform[]
-					transformer.ft(toTransform);
-					//to publish results on the IU thread
-					publishProgress(freqMagnitude(toTransform));
+					try {
+						if (total <= buff.length) { //if short record
+							fIn.read(buff, 0, (int) total);
+							read = (int) total;
+							isReplaying = false;
+						} else { //if long record
+							if (counter < 10) {
+								fIn.read(buff, counter * buff.length, buff.length);
+								counter++;
+							}else
+							if (counter == blockSize-1) {
+								fIn.read(buff, counter * buff.length, (int) (total - buff.length * counter));
+								counter = 0;
+								isReplaying = false;
+							}
+							read = blockSize;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}finally {
+						if (!isReplaying && wasRepaying && fIn != null)
+							try {
+								fIn.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+					}
+					ByteBuffer.wrap(buff).asShortBuffer().get(buffer);
 				}
+
+				// Read in the data from the mic to the array
+				for (int i = 0; i < blockSize && i < read; i++) {
+					//Since the range of toTransform[i] is [-1,1), re-scale it
+					//such that its base is 0 instead of -1
+					toTransform[i] = (buffer[i] / 32768.0); // signed 16 bit
+				}
+
+				//Forwards Fourier Transforms toTransform[]
+				transformer.ft(toTransform);
+				//to publish results on the IU thread
+				publishProgress(freqMagnitude(toTransform));
+			}
 		}
 		return true;
 	}
@@ -294,7 +294,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 					body.setForearm_counter(1); // increase counter by one
 				}else if(frequency[i] > (body.DIST_SENS_FRQ-200) && frequency[i] < (body.DIST_SENS_FRQ+200)){
 					Log.d("distanceSensFrq", Double.toString(frequency[i]));
-						averageDist[j]=magnitude[i];
+					averageDist[j]=magnitude[i];
 					if (j<9)
 						j++;
 					else
@@ -305,81 +305,81 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			}
 		}
 
-        if (body.getBicep_counter()>muscles_counterThreshold) { // check if counter of bicep is greater than the muscle counter threshold
-            body.isBicepActive = true;
-            body.setBicep_counter(0); // decrement counter
-        }
-        else
-            body.isBicepActive=false;
+		if (body.getBicep_counter()>muscles_counterThreshold) { // check if counter of bicep is greater than the muscle counter threshold
+			body.isBicepActive = true;
+			body.setBicep_counter(0); // decrement counter
+		}
+		else
+			body.isBicepActive=false;
 
-        if (body.getTriceps_counter()>muscles_counterThreshold) { // check if counter of triceps is greater than the muscle counter threshold
-            body.isTricepsActive = true;
-            body.setTriceps_counter(0); // decrement counter
-        }
-        else
-            body.isTricepsActive=false;
+		if (body.getTriceps_counter()>muscles_counterThreshold) { // check if counter of triceps is greater than the muscle counter threshold
+			body.isTricepsActive = true;
+			body.setTriceps_counter(0); // decrement counter
+		}
+		else
+			body.isTricepsActive=false;
 
-        if (body.getForearm_counter()>muscles_counterThreshold) { // check if counter of forearm is greater than the muscle counter threshold
-            body.isForearmActive = true;
-            body.setForearm_counter(0); // decrement counter
-        }
-        else
-            body.isForearmActive=false;
+		if (body.getForearm_counter()>muscles_counterThreshold) { // check if counter of forearm is greater than the muscle counter threshold
+			body.isForearmActive = true;
+			body.setForearm_counter(0); // decrement counter
+		}
+		else
+			body.isForearmActive=false;
 
 
-        if (body.getDist_Sensor_counter()==9) {
-            body.isDist_sensorActive = true;
+		if (body.getDist_Sensor_counter()==9) {
+			body.isDist_sensorActive = true;
 
-        }
-        else{
-            body.isDist_sensorActive=false;
-            body.setDist_Sensor_counter(0);
-            j=0;
-        }
+		}
+		else{
+			body.isDist_sensorActive=false;
+			body.setDist_Sensor_counter(0);
+			j=0;
+		}
 		return magnitude;
 	}
 
 	public double getMaxMagnitude(double[] magnitude) { // gets max magnitude
-	    double max_magnitude = magnitude[0];
-	    for(int i = 0 ; i < magnitude.length ; i++)
-        {
-            if(magnitude[i] > max_magnitude) {
-                max_magnitude = magnitude[i];
-            }
-        }
-	    return max_magnitude;
-    }
+		double max_magnitude = magnitude[0];
+		for(int i = 0 ; i < magnitude.length ; i++)
+		{
+			if(magnitude[i] > max_magnitude) {
+				max_magnitude = magnitude[i];
+			}
+		}
+		return max_magnitude;
+	}
 
-    public double getMinMagnitude(double[] magnitude) { // get min magnitude
-        double min_magnitude = magnitude[0];
-        for(int i = 0 ; i < magnitude.length ; i++)
-        {
-            if(magnitude[i] < min_magnitude) {
-                min_magnitude = magnitude[i];
-            }
-        }
-        return min_magnitude;
-    }
+	public double getMinMagnitude(double[] magnitude) { // get min magnitude
+		double min_magnitude = magnitude[0];
+		for(int i = 0 ; i < magnitude.length ; i++)
+		{
+			if(magnitude[i] < min_magnitude) {
+				min_magnitude = magnitude[i];
+			}
+		}
+		return min_magnitude;
+	}
 
-    public double getMaxFrequency(double [] frequency) { // gets max frequency
-        double max_frequency = frequency[0];
-        for(int j = 0 ; j < frequency.length ; j++) {
-            if(max_frequency < frequency[j]) {
-                max_frequency = frequency[j];
-            }
-        }
-        return max_frequency;
-    }
+	public double getMaxFrequency(double [] frequency) { // gets max frequency
+		double max_frequency = frequency[0];
+		for(int j = 0 ; j < frequency.length ; j++) {
+			if(max_frequency < frequency[j]) {
+				max_frequency = frequency[j];
+			}
+		}
+		return max_frequency;
+	}
 
-    public double getMinFrequency(double[] frequency) { // gets minimum frequency
-        double min_frequency = frequency[0];
-        for(int k = 0 ; k < frequency.length ; k++) {
-            if(min_frequency > frequency[k]) {
-                min_frequency = frequency[k];
-            }
-        }
-        return min_frequency;
-    }
+	public double getMinFrequency(double[] frequency) { // gets minimum frequency
+		double min_frequency = frequency[0];
+		for(int k = 0 ; k < frequency.length ; k++) {
+			if(min_frequency > frequency[k]) {
+				min_frequency = frequency[k];
+			}
+		}
+		return min_frequency;
+	}
 
 	//UPDATE SCREEN by invoked on the UI thread after a call to publishProgress()
 	// from doInBackground() <-- "AsyncTast" extension
@@ -389,11 +389,11 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		canvasDisplaySpectrum.drawColor(Color.BLACK);
 		int downy=1;
 		int upy=1;
-        float[] intervals = new float[]{20.0f, 20.0f}; // creates interval between dashes in dashed line
-        float phase = 0;
-        DashPathEffect dashPathEffect = new DashPathEffect(intervals, phase);
-        paintMaxMagnitude.setPathEffect(dashPathEffect); // dashed line for max magnitude
-        paintMinMagnitude.setPathEffect(dashPathEffect); // dashed line for min magnitude
+		float[] intervals = new float[]{20.0f, 20.0f}; // creates interval between dashes in dashed line
+		float phase = 0;
+		DashPathEffect dashPathEffect = new DashPathEffect(intervals, phase);
+		paintMaxMagnitude.setPathEffect(dashPathEffect); // dashed line for max magnitude
+		paintMinMagnitude.setPathEffect(dashPathEffect); // dashed line for min magnitude
 
 		double freqGap= (((double)sampleRate)/((double)blockSize)); // frequency gap
 
@@ -401,34 +401,36 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		int line_position_Triceps = Math.round((float)((double)body.TRICEPS_FRQ/freqGap)); // line indicating triceps frequency
 		int line_position_Forearm = Math.round((float)((double)body.FOREARM_FRQ/freqGap)); // line indicating forearm frequency
 
-        //TODO: if else inside for loop not the other way around
+		//TODO: if else inside for loop not the other way around
+		if (width > 512) {
 			for (int i = 0; i < progress[0].length; i++) {
-				if (width > 512) { //if screen is large enough double the size
-					int x = 4 * i;
-					downy = (int) (500 - (progress[0][i] * 10));
-					upy = 500;
-					canvasDisplaySpectrum.drawLine(x, downy, x, upy , paintSpectrumDisplay);
-					canvasDisplaySpectrum.drawLine(line_position_Bicep*4, origin, line_position_Bicep*4, upy, paintFreqLines_B);
-					canvasDisplaySpectrum.drawLine(line_position_Triceps*4, origin, line_position_Triceps*4, upy, paintFreqLines_T);
-					canvasDisplaySpectrum.drawLine(line_position_Forearm*4, origin, line_position_Forearm*4, upy, paintFreqLines_F);
-					canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min , paintMinMagnitude);
-					canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude);
-					imageViewDisplaySpectrum.invalidate();
-				}
-				else { // if screen is not large enough
-					int x = i;
-					downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
-					upy = 250;
-					canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
-
-					canvasDisplaySpectrum.drawLine(line_position_Bicep, origin, line_position_Bicep, upy, paintFreqLines_B);
-					canvasDisplaySpectrum.drawLine(line_position_Triceps, origin, line_position_Triceps, upy, paintFreqLines_T);
-					canvasDisplaySpectrum.drawLine(line_position_Forearm, origin, line_position_Forearm, upy, paintFreqLines_F);
-					canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min, paintMinMagnitude);
-					canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude);
-					imageViewDisplaySpectrum.invalidate();
-				}
+				int x = 4 * i;
+				downy = (int) (500 - (progress[0][i] * 10));
+				upy = 500;
+//				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
+				canvasDisplaySpectrum.drawLine(x, downy, x, upy , paintSpectrumDisplay);
 			}
+			canvasDisplaySpectrum.drawLine(line_position_Bicep*4, origin, line_position_Bicep*4, upy, paintFreqLines_B); // draw bicep frequency line
+			canvasDisplaySpectrum.drawLine(line_position_Triceps*4, origin, line_position_Triceps*4, upy, paintFreqLines_T); // draw triceps frequency line
+			canvasDisplaySpectrum.drawLine(line_position_Forearm*4, origin, line_position_Forearm*4, upy, paintFreqLines_F); // draw forearm frequency line
+			canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min , paintMinMagnitude); // draw min magnitude dashed line
+			canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude); // draw max magnitude dashed line
+			imageViewDisplaySpectrum.invalidate();
+		} else {
+			for (int i = 0; i < progress[0].length; i++) {
+				int x = i;
+				downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
+				upy = 250;
+				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
+			}
+
+			canvasDisplaySpectrum.drawLine(line_position_Bicep, origin, line_position_Bicep, upy, paintFreqLines_B); // draw bicep frequency line
+			canvasDisplaySpectrum.drawLine(line_position_Triceps, origin, line_position_Triceps, upy, paintFreqLines_T); // draw triceps frequency line
+			canvasDisplaySpectrum.drawLine(line_position_Forearm, origin, line_position_Forearm, upy, paintFreqLines_F); // draw forearm frequency line
+			canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min , paintMinMagnitude); // draw min magnitude dashed line
+			canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude); // draw max magnitude dashed line
+			imageViewDisplaySpectrum.invalidate();
+		}
 
 		double av=0;
 		for(int i=0; i<9;i++) {
@@ -439,20 +441,20 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 		while (counter <0) {
 			if (body.isBicepActive && !BwasActive) {
-                for(int i = 0 ; i < blockSize / 2 ; i++) {
-                	if(magnitude[i] >= high_magnitude) {
-                	    drawBody.paintBicep.setColor(Color.RED);
-                    }
-                    else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
-                	    drawBody.paintBicep.setColor(Color.rgb(255 , 165 , 0));
-                    }
+				for(int i = 0 ; i < blockSize / 2 ; i++) {
+					if(magnitude[i] >= high_magnitude) {
+						drawBody.paintBicep.setColor(Color.RED);
+					}
+					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
+						drawBody.paintBicep.setColor(Color.rgb(255 , 165 , 0));
+					}
 //                    int max_magnitude = (int) getMaxMagnitude(magnitude);
 //                    int red_value = (int) (Math.min((magnitude[i] / lim_max) , 1) * max_col);
 //                    int green_value = (int) (Math.max((lim_max - magnitude[i])/ lim_max , 0)  * max_col);
 //                    drawBody.paintBicep.setColor(Color.rgb(red_value , green_value , 0));
-                    BwasActive = true;
-                    body.isBicepActive = false;
-                }
+					BwasActive = true;
+					body.isBicepActive = false;
+				}
 			}
 			else if (!body.isBicepActive && BwasActive){
 				drawBody.paintBicep.setColor(Color.GREEN);
@@ -460,20 +462,20 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			}
 
 			if (body.isTricepsActive && !TwasActive){
-                for(int i = 0 ; i < blockSize / 2 ; i++) {
-                    if(magnitude[i] >= high_magnitude) {
-                        drawBody.paintTriceps.setColor(Color.RED);
-                    }
-                    else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
-                        drawBody.paintTriceps.setColor(Color.rgb(255 , 165 , 0));
-                    }
+				for(int i = 0 ; i < blockSize / 2 ; i++) {
+					if(magnitude[i] >= high_magnitude) {
+						drawBody.paintTriceps.setColor(Color.RED);
+					}
+					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
+						drawBody.paintTriceps.setColor(Color.rgb(255 , 165 , 0));
+					}
 //                    int max_magnitude = (int) getMaxMagnitude(magnitude);
 //                    int red_value = (int) (Math.min((magnitude[i] / lim_max) , 1) * max_col);
 //                    int green_value = (int) (Math.max((lim_max - magnitude[i])/ lim_max , 0)  * max_col);
 //                    drawBody.paintTriceps.setColor(Color.rgb(red_value , green_value , 0));
-                    TwasActive=true;
-                    body.isTricepsActive=false;
-                }
+					TwasActive=true;
+					body.isTricepsActive=false;
+				}
 			}
 			else if(!body.isTricepsActive && TwasActive){
 				drawBody.paintTriceps.setColor(Color.GREEN);
@@ -481,20 +483,20 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			}
 
 			if (body.isForearmActive && !FwasActive) {
-                for(int i = 0 ; i < blockSize / 2 ; i++) {
-                    if(magnitude[i] >= high_magnitude) {
-                        drawBody.paintForearm.setColor(Color.RED);
-                    }
-                    else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
-                        drawBody.paintForearm.setColor(Color.rgb(255 , 165 , 0));
-                    }
+				for(int i = 0 ; i < blockSize / 2 ; i++) {
+					if(magnitude[i] >= high_magnitude) {
+						drawBody.paintForearm.setColor(Color.RED);
+					}
+					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
+						drawBody.paintForearm.setColor(Color.rgb(255 , 165 , 0));
+					}
 //                    int max_magnitude = (int) getMaxMagnitude(magnitude);
 //                    int red_value = (int) (Math.min((magnitude[i] / lim_max), 1) * max_col);
 //                    int green_value = (int) (Math.max((lim_max - magnitude[i])/ lim_max , 0)  * max_col);
 //                    drawBody.paintForearm.setColor(Color.rgb(red_value , green_value , 0));
-                    FwasActive = true;
-                    body.isForearmActive = false;
-                }
+					FwasActive = true;
+					body.isForearmActive = false;
+				}
 			}
 			else if (!body.isForearmActive && FwasActive){
 				drawBody.paintForearm.setColor(Color.GREEN);
