@@ -439,16 +439,15 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 
 		while (counter <0) {
 			if (body.isBicepActive && !BwasActive) {
-				for(int i = 0 ; i < blockSize / 2 ; i++) {
+				for(int i = 0 ; i < progress[0].length ; i++) {
 					if(magnitude[i] >= high_magnitude) {
 						drawBody.paintBicep.setColor(Color.RED);
 					}
 					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
 						drawBody.paintBicep.setColor(Color.rgb(255 , 165 , 0));
 					}
-//                    int max_magnitude = (int) getMaxMagnitude(magnitude);
-//                    int red_value = (int) (Math.min((magnitude[i] / lim_max) , 1) * max_col);
-//                    int green_value = (int) (Math.max((lim_max - magnitude[i])/ lim_max , 0)  * max_col);
+//                    int red_value = (int) (Math.min(((500 - (progress[0][i] * 10)) / lim_max) , 1) * max_col);
+//                    int green_value = (int) (Math.max((lim_max - (500 - (progress[0][i] * 10)))/ lim_max , 0)  * max_col);
 //                    drawBody.paintBicep.setColor(Color.rgb(red_value , green_value , 0));
 					BwasActive = true;
 					body.isBicepActive = false;
@@ -467,10 +466,9 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
 						drawBody.paintTriceps.setColor(Color.rgb(255 , 165 , 0));
 					}
-//                    int max_magnitude = (int) getMaxMagnitude(magnitude);
-//                    int red_value = (int) (Math.min((magnitude[i] / lim_max) , 1) * max_col);
-//                    int green_value = (int) (Math.max((lim_max - magnitude[i])/ lim_max , 0)  * max_col);
-//                    drawBody.paintTriceps.setColor(Color.rgb(red_value , green_value , 0));
+//                    int red_value = (int) (Math.min(((500 - (progress[0][i] * 10)) / lim_max) , 1) * max_col);
+//                    int green_value = (int) (Math.max((lim_max - (500 - (progress[0][i] * 10)))/ lim_max , 0)  * max_col);
+//                    drawBody.paintBicep.setColor(Color.rgb(red_value , green_value , 0));
 					TwasActive=true;
 					body.isTricepsActive=false;
 				}
@@ -488,10 +486,9 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
 						drawBody.paintForearm.setColor(Color.rgb(255 , 165 , 0));
 					}
-//                    int max_magnitude = (int) getMaxMagnitude(magnitude);
-//                    int red_value = (int) (Math.min((magnitude[i] / lim_max), 1) * max_col);
-//                    int green_value = (int) (Math.max((lim_max - magnitude[i])/ lim_max , 0)  * max_col);
-//                    drawBody.paintForearm.setColor(Color.rgb(red_value , green_value , 0));
+//                    int red_value = (int) (Math.min(((500 - (progress[0][i] * 10)) / lim_max) , 1) * max_col);
+//                    int green_value = (int) (Math.max((lim_max - (500 - (progress[0][i] * 10)))/ lim_max , 0)  * max_col);
+//                    drawBody.paintBicep.setColor(Color.rgb(red_value , green_value , 0));
 					FwasActive = true;
 					body.isForearmActive = false;
 				}

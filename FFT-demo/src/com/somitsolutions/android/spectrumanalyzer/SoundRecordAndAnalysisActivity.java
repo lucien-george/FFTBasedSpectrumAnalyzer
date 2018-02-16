@@ -40,7 +40,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	Button ReplayButton; // replay saved movement button
 	RecordTask recordTask; //recordTask instantiated
 	body body; // body object instantiated
-	int BICEP_FRQ= 100 /*7000*/; // bicep frequency
+	int BICEP_FRQ= 7000; // bicep frequency
 	int TRICEPS_FRQ= 1000/*10000*/; // tricep frequency
 	int FOREARM_FRQ= 2000/*16000*/; // forearm frequency
 	int DIST_SENS_FRQ=12000;
