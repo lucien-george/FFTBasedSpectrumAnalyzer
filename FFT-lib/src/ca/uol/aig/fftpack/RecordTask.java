@@ -133,44 +133,43 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 	@Override
 	protected Boolean doInBackground(Void... params) {
 		Log.d("Recording doBackground", params.toString());
-		file= init_writeFile();
+		file= init_writeFile(); // initiation of file writing
 		try {
-			if(!file.exists())
-				file.createNewFile();
+			if(!file.exists()) // check if file doesn't exist
+				file.createNewFile(); // create a new file
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		try {
-				fOut = new FileOutputStream(file);
-				myOutWriter = new OutputStreamWriter(fOut);
+				fOut = new FileOutputStream(file); // output file
+				myOutWriter = new OutputStreamWriter(fOut); // output writer?
 
-				fIn = new FileInputStream(file);
-				myInReader = new InputStreamReader(fIn);
+				fIn = new FileInputStream(file); // input file
+				myInReader = new InputStreamReader(fIn); // input reader?
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		int bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfiguration, audioEncoding);
-		audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, sampleRate, channelConfiguration, audioEncoding, bufferSize);
-		int read=0;
+		int bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfiguration, audioEncoding); // set buffer size
+		audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, sampleRate, channelConfiguration, audioEncoding, bufferSize); // initializing audioRecord
+		int read = 0 , counter = 0;
 		long total=0;
-		boolean run=true;
-		int counter=0;
+		boolean run = true;
 		short[] buffer = new short[blockSize];
-		byte[] buff = new byte[2*blockSize];
+		byte[] buff = new byte[2 * blockSize];
 		double[] toTransform = new double[blockSize];
 
 		try {
-			audioRecord.startRecording();
-			started = true;
+			audioRecord.startRecording(); // start recording
+			started = true; // record started recording
 		} catch (IllegalStateException e) {
 			Log.e("Recording failed", e.toString());
 		}
 
 		while (started) {
-				if (isCancelled() || (CANCELLED_FLAG)) {
-					started = false;
+				if (isCancelled() || (CANCELLED_FLAG)) { // if record is cancelled
+					started = false; // then started is false
 					Log.d("doInBackground", "Cancelling the RecordTask");
 					break;
 				} else {
@@ -179,30 +178,26 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 					 * to the size of the window "blockSize". The data is then
 					 * given in to audioRecord. The int returned is the number
 					 * of bytes that were read*/
-
 						read = audioRecord.read(buffer, 0, blockSize);
 						Log.v("Read ", Integer.toString(read));
-						if (isRecording) {
-							ByteBuffer.wrap(buff).asShortBuffer().put(buffer);
+						if (isRecording) { // if is recording
+							ByteBuffer.wrap(buff).asShortBuffer().put(buffer); // write to buffer?
 							wasRecording = true;
 							try {
 
-								if (total + read > 4294967295L) {
-									// Write as many bytes as we can before hitting the max size
+								if (total + read > 4294967295L) { // Write as many bytes as we can before hitting the max size
 									for (int i = 0; i < read && total <= 4294967295L; i++, total++) {
 										fOut.write(buff[i]);
 									}
-									isRecording = false;
+									isRecording = false; // is recording is false because file limit is reached
 									Log.v("File ", "hit file limit");
 								} else {
-									// Write out the entire read buffer
-									fOut.write(buff, 0, read);
+									fOut.write(buff, 0, read); // Write out the entire read buffer
 								}
 								total += read;
 
 							} catch (IOException ex) {
-								//return new Object[]{ex};
-							} finally {
+							} finally { //return new Object[]{ex};
 								if (!isRecording && wasRecording && fOut != null)
 									try {
 										fOut.close();
@@ -219,15 +214,13 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 							e.printStackTrace();
 						}
 						try {
-							//if short record
-							if (total <= buff.length) {
+							if (total <= buff.length) { //if short record
 								fIn.read(buff, 0, (int) total);
 								read = (int) total;
 								isReplaying = false;
 							} else { //if long record
 								if (counter < 10) {
 									fIn.read(buff, counter * buff.length, buff.length);
-
 									counter++;
 								}else
 								if (counter == blockSize-1) {
@@ -261,60 +254,44 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 					transformer.ft(toTransform);
 					//to publish results on the IU thread
 					publishProgress(freqMagnitude(toTransform));
-					System.out.println("Max Magnitude = " + getMaxMagnitude(freqMagnitude(toTransform)));
-                    System.out.println("Min Magnitude = " + getMinMagnitude(freqMagnitude(toTransform)));
 				}
 		}
 		return true;
 	}
 
 	public File init_writeFile(){
-		// Get the directory for the user's public pictures directory.
-		final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/KIS/");
-		// Make sure the path directory exists.
-		if(!path.exists()) {
-			// Make it, if it doesn't exit
-			path.mkdirs();
+		final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/KIS/"); // Get the directory for the user's public pictures directory.
+		if(!path.exists()) { // Make sure the path directory exists.
+			path.mkdirs(); // Make it, if it doesn't exit
 		}
 		File file = new File(path, RecordTask.IO_FILENAME);
 		return file;
 	}
-	//returns the magnitude and which muscle has been activated
-	double [] freqMagnitude(double [] toTransform){
+
+	double [] freqMagnitude(double [] toTransform){ //returns the magnitude and which muscle has been activated
 		re = new double[blockSize];
 		im = new double[blockSize];
 		magnitude = new double[blockSize/2];
 		frequency = new double[blockSize/2];
 
-		// Calculate the Real and imaginary and Magnitude.
-		for(int i = 0; i < (blockSize/2); i++){
-			// real is stored in first part of array
-			re[i] = toTransform[i*2];
-			// imaginary is stored in the sequential part
-			im[i] = toTransform[(i*2)+1];
+		for(int i = 0; i < (blockSize/2); i++){ // Calculate the Real and imaginary and Magnitude.
+			re[i] = toTransform[i*2]; // real is stored in first part of array
+			im[i] = toTransform[(i*2)+1]; // imaginary is stored in the sequential part
 
 		}
 		for(int i =0; i < (blockSize/2) ; i++){
-			// magnitude is calculated by the square root of (imaginary^2 + real^2)
-			magnitude[i] = 0.7*(Math.sqrt((re[i] * re[i]) + (im[i]*im[i])));
-			// calculated the frequency
-			frequency[i] = i*(sampleRate)/(blockSize);
-			//checks how many signals are above threshold
-			if (magnitude[i] > THRESHOLD) {
-				//checks if the signal belongs to one of the targeted muscle frequency window
-				//then increment counter for each muscle frequency window
-				if (frequency[i] > (body.BICEP_FRQ-200) && frequency[i] < (body.BICEP_FRQ+200)) {
+			magnitude[i] = 0.7*(Math.sqrt((re[i] * re[i]) + (im[i]*im[i]))); // magnitude is calculated by the square root of (imaginary^2 + real^2)
+			frequency[i] = i*(sampleRate)/(blockSize); // calculated the frequency
+			if (magnitude[i] > THRESHOLD) { // checks how many signals are above threshold
+				if (frequency[i] > (body.BICEP_FRQ-200) && frequency[i] < (body.BICEP_FRQ+200)) { // checks if the signal belongs to one of the targeted muscle frequency window then increment counter for each muscle frequency window
 					Log.d("bicepfrq", Double.toString(frequency[i]));
-					//increase counter by one
-					body.setBicep_counter(1);
+					body.setBicep_counter(1);// increase counter by one
 				}else if(frequency[i] > (body.TRICEPS_FRQ-200) && frequency[i] < (body.TRICEPS_FRQ+200)){
 					Log.d("tricepsfrq", Double.toString(frequency[i]));
-					//increase counter by one
-					body.setTriceps_counter(1);
+					body.setTriceps_counter(1); // increase counter by one
 				}else if(frequency[i] > (body.FOREARM_FRQ-200) && frequency[i] < (body.FOREARM_FRQ+200)){
 					Log.d("forearmfrq", Double.toString(frequency[i]));
-					//increase counter by one
-					body.setForearm_counter(1);
+					body.setForearm_counter(1); // increase counter by one
 				}else if(frequency[i] > (body.DIST_SENS_FRQ-200) && frequency[i] < (body.DIST_SENS_FRQ+200)){
 					Log.d("distanceSensFrq", Double.toString(frequency[i]));
 						averageDist[j]=magnitude[i];
@@ -323,29 +300,28 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 					else
 						j=0;
 					Log.v("averageDistMagg: ", Double.toString(j));
-					//increase counter by one
-					body.setDist_Sensor_counter(1);
+					body.setDist_Sensor_counter(1); //increase counter by one
 				}
 			}
 		}
 
-        if (body.getBicep_counter()>muscles_counterThreshold) {
+        if (body.getBicep_counter()>muscles_counterThreshold) { // check if counter of bicep is greater than the muscle counter threshold
             body.isBicepActive = true;
-            body.setBicep_counter(0);
+            body.setBicep_counter(0); // decrement counter
         }
         else
             body.isBicepActive=false;
 
-        if (body.getTriceps_counter()>muscles_counterThreshold) {
+        if (body.getTriceps_counter()>muscles_counterThreshold) { // check if counter of triceps is greater than the muscle counter threshold
             body.isTricepsActive = true;
-            body.setTriceps_counter(0);
+            body.setTriceps_counter(0); // decrement counter
         }
         else
             body.isTricepsActive=false;
 
-        if (body.getForearm_counter()>muscles_counterThreshold) {
+        if (body.getForearm_counter()>muscles_counterThreshold) { // check if counter of forearm is greater than the muscle counter threshold
             body.isForearmActive = true;
-            body.setForearm_counter(0);
+            body.setForearm_counter(0); // decrement counter
         }
         else
             body.isForearmActive=false;
@@ -359,12 +335,11 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
             body.isDist_sensorActive=false;
             body.setDist_Sensor_counter(0);
             j=0;
-            //maxMag=10;
         }
 		return magnitude;
 	}
 
-	public double getMaxMagnitude(double[] magnitude) {
+	public double getMaxMagnitude(double[] magnitude) { // gets max magnitude
 	    double max_magnitude = magnitude[0];
 	    for(int i = 0 ; i < magnitude.length ; i++)
         {
@@ -375,7 +350,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 	    return max_magnitude;
     }
 
-    public double getMinMagnitude(double[] magnitude) {
+    public double getMinMagnitude(double[] magnitude) { // get min magnitude
         double min_magnitude = magnitude[0];
         for(int i = 0 ; i < magnitude.length ; i++)
         {
@@ -386,8 +361,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
         return min_magnitude;
     }
 
-    //find the maximum frequency received
-    public double getMaxFrequency(double [] frequency) {
+    public double getMaxFrequency(double [] frequency) { // gets max frequency
         double max_frequency = frequency[0];
         for(int j = 0 ; j < frequency.length ; j++) {
             if(max_frequency < frequency[j]) {
@@ -397,8 +371,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
         return max_frequency;
     }
 
-    //find the minimum frequency received
-    public double getMinFrequency(double[] frequency) {
+    public double getMinFrequency(double[] frequency) { // gets minimum frequency
         double min_frequency = frequency[0];
         for(int k = 0 ; k < frequency.length ; k++) {
             if(min_frequency > frequency[k]) {
@@ -416,62 +389,55 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		canvasDisplaySpectrum.drawColor(Color.BLACK);
 		int downy=1;
 		int upy=1;
-        float[] intervals = new float[]{20.0f, 20.0f};
+        float[] intervals = new float[]{20.0f, 20.0f}; // creates interval between dashes in dashed line
         float phase = 0;
         DashPathEffect dashPathEffect = new DashPathEffect(intervals, phase);
-        paintMaxMagnitude.setPathEffect(dashPathEffect);
-        paintMinMagnitude.setPathEffect(dashPathEffect);
+        paintMaxMagnitude.setPathEffect(dashPathEffect); // dashed line for max magnitude
+        paintMinMagnitude.setPathEffect(dashPathEffect); // dashed line for min magnitude
 
-		double freqGap= (((double)sampleRate)/((double)blockSize));
+		double freqGap= (((double)sampleRate)/((double)blockSize)); // frequency gap
 
-		int line_position_Bicep = Math.round((float)((double)body.BICEP_FRQ/freqGap));
-		int line_position_Triceps = Math.round((float)((double)body.TRICEPS_FRQ/freqGap));
-		int line_position_Forearm = Math.round((float)((double)body.FOREARM_FRQ/freqGap));
+		int line_position_Bicep = Math.round((float)((double)body.BICEP_FRQ/freqGap)); // line indicating bicep frequency
+		int line_position_Triceps = Math.round((float)((double)body.TRICEPS_FRQ/freqGap)); // line indicating triceps frequency
+		int line_position_Forearm = Math.round((float)((double)body.FOREARM_FRQ/freqGap)); // line indicating forearm frequency
 
-		//if screen large is enough double the size
         //TODO: if else inside for loop not the other way around
-		if (width > 512) {
 			for (int i = 0; i < progress[0].length; i++) {
-				int x = 4 * i;
-				downy = (int) (500 - (progress[0][i] * 10));
-				upy = 500;
-//				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
-                canvasDisplaySpectrum.drawLine(x, downy, x, upy , paintSpectrumDisplay);
-			}
-			canvasDisplaySpectrum.drawLine(line_position_Bicep*4, origin, line_position_Bicep*4, upy, paintFreqLines_B);
-			canvasDisplaySpectrum.drawLine(line_position_Triceps*4, origin, line_position_Triceps*4, upy, paintFreqLines_T);
-			canvasDisplaySpectrum.drawLine(line_position_Forearm*4, origin, line_position_Forearm*4, upy, paintFreqLines_F);
-			canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min , paintMinMagnitude);
-			canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude);
-			imageViewDisplaySpectrum.invalidate();
-		} else {
-			for (int i = 0; i < progress[0].length; i++) {
-				int x = i;
-				downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
-				upy = 250;
-				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
-			}
+				if (width > 512) { //if screen is large enough double the size
+					int x = 4 * i;
+					downy = (int) (500 - (progress[0][i] * 10));
+					upy = 500;
+					canvasDisplaySpectrum.drawLine(x, downy, x, upy , paintSpectrumDisplay);
+					canvasDisplaySpectrum.drawLine(line_position_Bicep*4, origin, line_position_Bicep*4, upy, paintFreqLines_B);
+					canvasDisplaySpectrum.drawLine(line_position_Triceps*4, origin, line_position_Triceps*4, upy, paintFreqLines_T);
+					canvasDisplaySpectrum.drawLine(line_position_Forearm*4, origin, line_position_Forearm*4, upy, paintFreqLines_F);
+					canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min , paintMinMagnitude);
+					canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude);
+					imageViewDisplaySpectrum.invalidate();
+				}
+				else { // if screen is not large enough
+					int x = i;
+					downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
+					upy = 250;
+					canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 
-			canvasDisplaySpectrum.drawLine(line_position_Bicep, origin, line_position_Bicep, upy, paintFreqLines_B);
-			canvasDisplaySpectrum.drawLine(line_position_Triceps, origin, line_position_Triceps, upy, paintFreqLines_T);
-			canvasDisplaySpectrum.drawLine(line_position_Forearm, origin, line_position_Forearm, upy, paintFreqLines_F);
-//			canvasDisplaySpectrum.drawLine(0 , 1 , width , 1 , paintMinMagnitude);
-//			canvasDisplaySpectrum.drawLine(0 , 290 , width , 290 , paintMaxMagnitude);
-			imageViewDisplaySpectrum.invalidate();
-		}
+					canvasDisplaySpectrum.drawLine(line_position_Bicep, origin, line_position_Bicep, upy, paintFreqLines_B);
+					canvasDisplaySpectrum.drawLine(line_position_Triceps, origin, line_position_Triceps, upy, paintFreqLines_T);
+					canvasDisplaySpectrum.drawLine(line_position_Forearm, origin, line_position_Forearm, upy, paintFreqLines_F);
+					canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min, paintMinMagnitude);
+					canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude);
+					imageViewDisplaySpectrum.invalidate();
+				}
+			}
 
 		double av=0;
 		for(int i=0; i<9;i++) {
 			av = av + averageDist[i];
 		}
-
-
-
 		av = av/9.0;
 		Log.v("average: ", Double.toString(av));
 
 		while (counter <0) {
-
 			if (body.isBicepActive && !BwasActive) {
                 for(int i = 0 ; i < blockSize / 2 ; i++) {
                 	if(magnitude[i] >= high_magnitude) {
@@ -543,14 +509,11 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		counter--;
 	}
 
-
 	public void updateDrawBody() {
 		drawBody.setPaintBicep(body.isBicepActive);
 		drawBody.setPaintForearm(body.isForearmActive);
 		drawBody.setPaintTriceps(body.isTricepsActive);
 	}
-
-
 
 	@Override
 	protected void onPostExecute(Boolean result) {
