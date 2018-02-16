@@ -401,15 +401,20 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		int line_position_Triceps = Math.round((float)((double)body.TRICEPS_FRQ/freqGap)); // line indicating triceps frequency
 		int line_position_Forearm = Math.round((float)((double)body.FOREARM_FRQ/freqGap)); // line indicating forearm frequency
 
-		//TODO: if else inside for loop not the other way around
-		if (width > 512) {
-			for (int i = 0; i < progress[0].length; i++) {
+		for (int i = 0; i < progress[0].length; i++) {
+			if (width > 512) {
 				int x = 4 * i;
 				downy = (int) (500 - (progress[0][i] * 10));
 				upy = 500;
-//				if (progress[0][i] < 0) Log.w("At x = " + i, Double.toString(progress[0][i]));
 				canvasDisplaySpectrum.drawLine(x, downy, x, upy , paintSpectrumDisplay);
+			} else {
+				int x = i;
+				downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
+				upy = 250;
+				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
 			}
+		}
+		if (width > 512) {
 			canvasDisplaySpectrum.drawLine(line_position_Bicep*4, origin, line_position_Bicep*4, upy, paintFreqLines_B); // draw bicep frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Triceps*4, origin, line_position_Triceps*4, upy, paintFreqLines_T); // draw triceps frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Forearm*4, origin, line_position_Forearm*4, upy, paintFreqLines_F); // draw forearm frequency line
@@ -417,13 +422,6 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude); // draw max magnitude dashed line
 			imageViewDisplaySpectrum.invalidate();
 		} else {
-			for (int i = 0; i < progress[0].length; i++) {
-				int x = i;
-				downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
-				upy = 250;
-				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
-			}
-
 			canvasDisplaySpectrum.drawLine(line_position_Bicep, origin, line_position_Bicep, upy, paintFreqLines_B); // draw bicep frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Triceps, origin, line_position_Triceps, upy, paintFreqLines_T); // draw triceps frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Forearm, origin, line_position_Forearm, upy, paintFreqLines_F); // draw forearm frequency line
