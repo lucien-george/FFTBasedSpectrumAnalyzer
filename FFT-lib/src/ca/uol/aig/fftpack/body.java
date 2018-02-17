@@ -36,44 +36,21 @@ import android.widget.LinearLayout;
 public class body {
 
 
-    int BICEP_FRQ;
-    int TRICEPS_FRQ;
-    int FOREARM_FRQ;
-    int DIST_SENS_FRQ;
+    int BICEP_FRQ , TRICEPS_FRQ , FOREARM_FRQ , DIST_SENS_FRQ; // muscle frequencies
 
 
-    public static boolean isBicepActive;
-    public static boolean isTricepsActive;
-    public static boolean isForearmActive;
-    public static boolean isDist_sensorActive;
+    public static boolean isBicepActive , isTricepsActive , isForearmActive , isDist_sensorActive; // boolean for active muscles
 
-    private int bicep_counter;
-    private int triceps_counter;
-    private int forearm_counter;
-    private int dist_sensor_counter;
+    private int bicep_counter , triceps_counter , forearm_counter , dist_sensor_counter; // counter for muscles
 
-    public Drawable BICEP;
-    public Drawable TRICEPS;
-    public Drawable FOREARM;
-    public Paint paintBicep;
-    public Paint paintTriceps;
-    public Paint paintForearm;
-    public ImageView imageViewBicep;
-    public ImageView imageViewTriceps;
-    public ImageView imageViewForearm;
-    public int width;
-    public int height;
-    ImageView imageViewDrawBody;
-    public int Bicep_textColor;
-    public int Triceps_textColor;
-    public int Forearm_textColor;
-    //drawBody drawBody;
-    //Context context;
+    public Drawable BICEP , TRICEPS , FOREARM; // Drawables for muscles
+    public Paint paintBicep , paintTriceps , paintForearm; // Paints for muscles
+    public ImageView imageViewBicep , imageViewTriceps , imageViewForearm , imageViewDrawBody; // Image views for muscles
+    public int width , height; // height and width of screen?
+    public int Bicep_textColor , Triceps_textColor , Forearm_textColor; // integers for muscles textColor
 
-
-    public body(int BICEP_FRQ, int TRICEPS_FRQ, int FOREARM_FRQ,int DIST_SENS_FRQ, Drawable BICEP,
-                Drawable TRICEPS, Drawable FOREARM , int Bicep_textColor, int Triceps_textColor, int Forearm_textColor/*, ImageView imageViewBicep, ImageView imageViewTriceps, ImageView imageViewForearm,
-                Paint paintBicep, Paint paintTriceps, Paint paintForearm, int width, int height*/){
+    // Constructor
+    public body(int BICEP_FRQ, int TRICEPS_FRQ, int FOREARM_FRQ,int DIST_SENS_FRQ, Drawable BICEP, Drawable TRICEPS, Drawable FOREARM , int Bicep_textColor, int Triceps_textColor, int Forearm_textColor){
 
         this.BICEP_FRQ=BICEP_FRQ;
         this.TRICEPS_FRQ=TRICEPS_FRQ;
@@ -97,9 +74,6 @@ public class body {
         triceps_counter=0;
         forearm_counter=0;
         dist_sensor_counter=0;
-
-
-
     }
 
 
@@ -117,13 +91,11 @@ public class body {
 
     public int getDist_Sensor_counter() {return dist_sensor_counter; }
 
-    //if mode is equal to 1 then counters are incremented else --> reset
-
-    public boolean setBicep_counter(int mode) {
+    public boolean setBicep_counter(int mode) { // If mode is equal to 1 then counters are incremented else --> reset
         if (mode==1 && bicep_counter<2)
-            bicep_counter++;
+            bicep_counter++; // increment bicep counter
         else if (mode==0 && bicep_counter>0)
-            bicep_counter--;
+            bicep_counter--; // decrement bicep counter
 
         if(bicep_counter==0)
             return true;
@@ -131,11 +103,11 @@ public class body {
             return false;
     }
 
-    public boolean setForearm_counter(int mode) {
+    public boolean setForearm_counter(int mode) { // If mode is equal to 1 then counters are incremented else --> reset
         if (mode==1 && forearm_counter<2)
-            forearm_counter++;
+            forearm_counter++; // increment forearm counter
         else if (mode==0 && forearm_counter>0)
-            forearm_counter--;
+            forearm_counter--; // decrement forearm counter
 
         if(forearm_counter==0)
             return true;
@@ -143,12 +115,11 @@ public class body {
             return false;
     }
 
-
-    public boolean setTriceps_counter(int mode) {
+    public boolean setTriceps_counter(int mode) { // If mode is equal to 1 then counters are incremented else --> reset
         if (mode==1 && triceps_counter<2)
-            triceps_counter++;
+            triceps_counter++; // increment tricep counter
         else if (mode==0 && triceps_counter>0)
-            triceps_counter--;
+            triceps_counter--; // decrement tricep counter
 
 
         if(triceps_counter==0 )
@@ -156,7 +127,6 @@ public class body {
         else
             return false;
     }
-
 
     public boolean setDist_Sensor_counter(int mode) {
         if (mode==1 && dist_sensor_counter<9)
@@ -170,8 +140,6 @@ public class body {
         else
             return false;
     }
-
-
 }
 
 

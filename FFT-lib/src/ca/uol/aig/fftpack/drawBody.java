@@ -32,25 +32,16 @@ public class drawBody extends ImageView {
 
     Context mContext;
 
-    int width;
-    int height;
-    int forearm_y;
-    int forearm_x;
-    DisplayMetrics displayM;
-    public Paint paintBicep;
-    public Paint paintTriceps;
-    public Paint paintForearm;
+    int width , height; // width and height of screen
+    int forearm_y , forearm_x; // forearm x and y coordinates
+    DisplayMetrics displayM; // device display
+    public Paint paintBicep , paintTriceps , paintForearm; // paint object for muscles
 
-
-    Bitmap bitmapBody;
-    Bitmap bitmapBicep;
-    Bitmap bitmapTriceps;
-    Bitmap bitmapForearm;
-    Canvas canvasBicep;
-    Canvas canvasTriceps;
-    Canvas canvasForearm;
+    Bitmap bitmapBody , bitmapBicep , bitmapTriceps , bitmapForearm; // bitmap for entire body and each individual muscles
+    Canvas canvasBicep , canvasTriceps , canvasForearm; // canvas for each muscle
     Handler handler;
 
+    // constructor
     public drawBody(Context context){
         super(context);
         this.mContext = context;
@@ -62,37 +53,37 @@ public class drawBody extends ImageView {
         if (!isInEditMode()) {
 
             displayM = this.getResources().getDisplayMetrics();
-            width = displayM.widthPixels;
-            height = (displayM.heightPixels);
+            width = displayM.widthPixels; // get screen width
+            height = (displayM.heightPixels); // get screen height
 
-            bitmapBody = Bitmap.createBitmap(width, 800, Bitmap.Config.ARGB_8888);
+            bitmapBody = Bitmap.createBitmap(width, 800, Bitmap.Config.ARGB_8888); // create bitmap for body
 //            bitmapBicep = Bitmap.createBitmap(width/3,800, Bitmap.Config.ARGB_8888);
 //            bitmapTriceps = Bitmap.createBitmap(width/3,800, Bitmap.Config.ARGB_8888);
 //            bitmapForearm = Bitmap.createBitmap(width/3,800, Bitmap.Config.ARGB_8888);
 
-            paintBicep = new Paint();
-            paintBicep.setColor(Color.GREEN);
-            paintBicep.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintBicep.setStrokeWidth(15);
+            paintBicep = new Paint(); // initialize paint
+            paintBicep.setColor(Color.GREEN); // set color to green
+            paintBicep.setStyle(Paint.Style.FILL_AND_STROKE); // set style
+            paintBicep.setStrokeWidth(15); // set width
 
-            paintTriceps = new Paint();
-            paintTriceps.setColor(Color.GREEN);
-            paintTriceps.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintTriceps.setStrokeWidth(15);
+            paintTriceps = new Paint(); // initialize paint
+            paintTriceps.setColor(Color.GREEN); // set color to green
+            paintTriceps.setStyle(Paint.Style.FILL_AND_STROKE); // set style
+            paintTriceps.setStrokeWidth(15); // set width
 
-            paintForearm = new Paint();
-            paintForearm.setColor(Color.GREEN);
-            paintForearm.setStyle(Paint.Style.FILL_AND_STROKE);
-            paintForearm.setStrokeWidth(20);
+            paintForearm = new Paint(); // initialize paint
+            paintForearm.setColor(Color.GREEN); // set color to green
+            paintForearm.setStyle(Paint.Style.FILL_AND_STROKE); // set style
+            paintForearm.setStrokeWidth(20); // set width
 
-            canvasBicep = new Canvas(bitmapBody);
-            canvasTriceps = new Canvas(bitmapBody);
-            canvasForearm = new Canvas(bitmapBody);
+            canvasBicep = new Canvas(bitmapBody); // add canvas to bitmap
+            canvasTriceps = new Canvas(bitmapBody); // add canvas to bitmap
+            canvasForearm = new Canvas(bitmapBody); // add canvas to bitmap
 //            canvasBicep = new Canvas(bitmapBicep);
 //            canvasTriceps = new Canvas(bitmapTriceps);
 //            canvasForearm = new Canvas(bitmapForearm);
 
-            setImageBitmap(bitmapBody);
+            setImageBitmap(bitmapBody); // display bitmap?
 //            setImageBitmap(bitmapBicep);
 //            setImageBitmap(bitmapTriceps);
 //            setImageBitmap(bitmapForearm);
@@ -110,21 +101,21 @@ public class drawBody extends ImageView {
             return;
         }
 
-        canvasBicep.drawLine(x + 80,y,(x+240),y+350,paintBicep);
+        canvasBicep.drawLine(x + 80,y,(x+240),y+350,paintBicep); // draw bicep at specific coordinates
 
 
-        canvasTriceps.drawLine(x,y,(x+160),y+350,paintTriceps);
+        canvasTriceps.drawLine(x,y,(x+160),y+350,paintTriceps); // draw tricep at specific coordinates
 
 
-        canvasForearm.drawLine(x+240,y+355,x+550,y+400,paintForearm);
+        canvasForearm.drawLine(x+240,y+355,x+550,y+400,paintForearm); // draw forearm at specific coordinates
 
-        forearm_y=y+355;
-        forearm_x=x+240;
+        forearm_y = y + 355;
+        forearm_x = x + 240;
     }
 
     public void setPaintBicep(boolean active) {
         if(active) {
-            paintBicep.setColor(Color.RED);
+            paintBicep.setColor(Color.RED); // set color of bicep to red
 //            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintBicep,"color", new ArgbEvaluator(),  paintBicep.getColor() , Color.RED);
 //            colorFade.setInterpolator(new LinearInterpolator());
 //            colorFade.setDuration(4000);
@@ -143,7 +134,7 @@ public class drawBody extends ImageView {
 //            canvasForearm.restore();
         }
         else {
-            paintBicep.setColor(Color.GREEN);
+            paintBicep.setColor(Color.GREEN); // set color of bicep to green
 //            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintBicep,"color", new ArgbEvaluator(),  paintBicep.getColor() , Color.GREEN);
 //            colorFade.setInterpolator(new LinearInterpolator());
 //            colorFade.setDuration(4000);
@@ -165,7 +156,7 @@ public class drawBody extends ImageView {
 
     public void setPaintTriceps(boolean active){
         if(active){
-            paintTriceps.setColor(Color.RED);
+            paintTriceps.setColor(Color.RED); // set color of triceps to red
 //            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintTriceps.getColor() , Color.RED);
 //            colorFade.setInterpolator(new LinearInterpolator());
 //            colorFade.setDuration(4000);
@@ -174,7 +165,7 @@ public class drawBody extends ImageView {
 //            t.start();
         }
         else{
-            paintTriceps.setColor(Color.GREEN);
+            paintTriceps.setColor(Color.GREEN); // set color of triceps to green
 //            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintTriceps,"color", new ArgbEvaluator(),  paintTriceps.getColor() , Color.GREEN);
 //            colorFade.setInterpolator(new LinearInterpolator());
 //            colorFade.setDuration(4000);
@@ -186,7 +177,7 @@ public class drawBody extends ImageView {
 
     public void setPaintForearm(boolean active){
         if(active){
-            paintForearm.setColor(Color.RED);
+            paintForearm.setColor(Color.RED); // set color of forearm to red
 //            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintForearm,"color", new ArgbEvaluator(),  paintForearm.getColor() , Color.RED);
 //            colorFade.setInterpolator(new LinearInterpolator());
 //            colorFade.setDuration(4000);
@@ -195,7 +186,7 @@ public class drawBody extends ImageView {
 //            t.start();
         }
         else{
-            paintForearm.setColor(Color.GREEN);
+            paintForearm.setColor(Color.GREEN); // set color of forearm to green
 //            ObjectAnimator    colorFade = ObjectAnimator.ofObject(paintForearm,"color", new ArgbEvaluator(),  paintForearm.getColor() , Color.GREEN);
 //            colorFade.setInterpolator(new LinearInterpolator());
 //            colorFade.setDuration(4000);
