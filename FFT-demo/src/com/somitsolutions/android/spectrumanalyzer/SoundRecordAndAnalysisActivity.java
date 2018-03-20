@@ -41,8 +41,8 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	RecordTask recordTask; //recordTask instantiated
 	body body; // body object instantiated
 	int BICEP_FRQ= 7000; // bicep frequency
-	int TRICEPS_FRQ= 1000/*10000*/; // tricep frequency
-	int FOREARM_FRQ= 2000/*16000*/; // forearm frequency
+	int TRICEPS_FRQ= 10000; // tricep frequency
+	int FOREARM_FRQ= 16000; // forearm frequency
 	int DIST_SENS_FRQ=12000;
 	int bitmap_height = 500;
 	public int Bicep_textColor = Color.CYAN , Triceps_textColor = Color.YELLOW , Forearm_textColor = Color.MAGENTA; // text color
@@ -55,7 +55,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 	Bitmap bitmapDisplaySpectrum;
 	Canvas canvasDisplaySpectrum , canvasBicep , canvasTriceps , canvasForearm; // canvas for each muscle
 	Paint paintSpectrumDisplay , paintBicep , paintTriceps , paintForearm;
-	LinearLayout main; // main layout
+	LinearLayout main; // Linear Layouts
 	RelativeLayout bparts , txtFreq , txt; // relative layouts
 	int width , height; // width & height of screen
 	DisplayMetrics displayM; // get height and widths of screen
@@ -70,6 +70,7 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		width = displayM.widthPixels; //screen width
 		height = displayM.heightPixels; //screen height
 		setContentView(R.layout.main); // call layout used for activity
+
 	}
 
 	protected boolean shouldAskPermissions() { // check that the device runs on Lollipop_MR1 or higher
@@ -190,6 +191,8 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		canvasDisplaySpectrum = new Canvas(bitmapDisplaySpectrum);
 		paintSpectrumDisplay = new Paint();
 		paintSpectrumDisplay.setColor(Color.GREEN); //color of the spectrum
+//		paintSpectrumDisplay.setStyle(Paint.Style.FILL_AND_STROKE);
+		paintSpectrumDisplay.setStrokeWidth(5f);
 
 
 		imageViewTriceps.setImageBitmap(bitmapDisplaySpectrum); // sets bitmap as content of this image view
@@ -215,9 +218,9 @@ public class SoundRecordAndAnalysisActivity extends Activity implements OnClickL
 		BicepT.setTextColor(Color.CYAN) ; TricepsT.setTextColor(Color.YELLOW) ; ForearmT.setTextColor(Color.MAGENTA); // set color for text views
 
 		txt.addView(BicepT) ; txt.addView(TricepsT) ; txt.addView(ForearmT); // add text views to layout txt
-
+		//TODO: Add Hz unit next to EditText
 		BicepTxt.setLayoutParams((findViewById(R.id.BicepTxt)).getLayoutParams()) ; TricepsTxt.setLayoutParams((findViewById(R.id.TricepsTxt)).getLayoutParams()) ; ForearmTxt.setLayoutParams((findViewById(R.id.ForarmTxt)).getLayoutParams()); // set parameters for edit texts
-		BicepTxt.setHint("insert Frq(Hz)") ; TricepsTxt.setHint("insert Frq(Hz)") ; ForearmTxt.setHint("insert Frq(Hz)"); // set hint in text views
+		BicepTxt.setHint(String.valueOf(BICEP_FRQ) + " Hz") ; TricepsTxt.setHint(String.valueOf(TRICEPS_FRQ) + " Hz") ; ForearmTxt.setHint(String.valueOf(FOREARM_FRQ) + " Hz"); // set hint in text views
 		BicepTxt.setHintTextColor(Color.LTGRAY) ; TricepsTxt.setHintTextColor(Color.LTGRAY) ; ForearmTxt.setHintTextColor(Color.LTGRAY); // set color of hints
 		BicepTxt.setInputType(InputType.TYPE_CLASS_NUMBER) ; TricepsTxt.setInputType(InputType.TYPE_CLASS_NUMBER) ; ForearmTxt.setInputType(InputType.TYPE_CLASS_NUMBER); // set input type as numbers
 

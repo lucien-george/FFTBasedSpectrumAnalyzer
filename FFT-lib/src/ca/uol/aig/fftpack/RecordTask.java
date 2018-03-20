@@ -56,7 +56,7 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 	private double[] im; // imaginary part
 	private double[] magnitude; // magnitude
 	private double[] frequency; // frequency
-	private int max_col = 255 , lim_min = 500 - 1 , lim_max = 500 - 290 , high_magnitude = 150 , medium_magnitude = 75 , blockSize = 256 , sampleRate =42000 , origin = 0 , muscles_counterThreshold=1;
+	private int max_col = 255 , lim_min = 100 , lim_max = 400 , high_magnitude = 150 , medium_magnitude = 75 , blockSize = 256 , sampleRate =42000 , origin = 0 , muscles_counterThreshold=1 , range = 100;
 
 	public final static String IO_FILENAME= "KISDataREC";
 	public static FileOutputStream fOut;
@@ -283,16 +283,16 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 			magnitude[i] = 0.7*(Math.sqrt((re[i] * re[i]) + (im[i]*im[i]))); // magnitude is calculated by the square root of (imaginary^2 + real^2)
 			frequency[i] = i*(sampleRate)/(blockSize); // calculated the frequency
 			if (magnitude[i] > THRESHOLD) { // checks how many signals are above threshold
-				if (frequency[i] > (body.BICEP_FRQ-200) && frequency[i] < (body.BICEP_FRQ+200)) { // checks if the signal belongs to one of the targeted muscle frequency window then increment counter for each muscle frequency window
+				if (frequency[i] > (body.BICEP_FRQ-range) && frequency[i] < (body.BICEP_FRQ+range)) { // checks if the signal belongs to one of the targeted muscle frequency window then increment counter for each muscle frequency window
 					Log.d("bicepfrq", Double.toString(frequency[i]));
 					body.setBicep_counter(1);// increase counter by one
-				}else if(frequency[i] > (body.TRICEPS_FRQ-200) && frequency[i] < (body.TRICEPS_FRQ+200)){
+				}else if(frequency[i] > (body.TRICEPS_FRQ-range) && frequency[i] < (body.TRICEPS_FRQ+range)){
 					Log.d("tricepsfrq", Double.toString(frequency[i]));
 					body.setTriceps_counter(1); // increase counter by one
-				}else if(frequency[i] > (body.FOREARM_FRQ-200) && frequency[i] < (body.FOREARM_FRQ+200)){
+				}else if(frequency[i] > (body.FOREARM_FRQ-range) && frequency[i] < (body.FOREARM_FRQ+range)){
 					Log.d("forearmfrq", Double.toString(frequency[i]));
 					body.setForearm_counter(1); // increase counter by one
-				}else if(frequency[i] > (body.DIST_SENS_FRQ-200) && frequency[i] < (body.DIST_SENS_FRQ+200)){
+				}else if(frequency[i] > (body.DIST_SENS_FRQ-range) && frequency[i] < (body.DIST_SENS_FRQ+range)){
 					Log.d("distanceSensFrq", Double.toString(frequency[i]));
 					averageDist[j]=magnitude[i];
 					if (j<9)
@@ -381,6 +381,17 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		return min_frequency;
 	}
 
+	public int getMaxProgress(int frequency , double[]... progress){
+		int value = 0;
+		for (int j = frequency / 4 ; j < (frequency + range) / 4 ; j++) {
+			value = (int) progress[0][frequency / 4];
+			if(value < progress[0][j]) {
+				value = (int) progress[0][j];
+			}
+		}
+		return value;
+	}
+
 	//UPDATE SCREEN by invoked on the UI thread after a call to publishProgress()
 	// from doInBackground() <-- "AsyncTast" extension
 	@Override
@@ -401,32 +412,53 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		int line_position_Triceps = Math.round((float)((double)body.TRICEPS_FRQ/freqGap)); // line indicating triceps frequency
 		int line_position_Forearm = Math.round((float)((double)body.FOREARM_FRQ/freqGap)); // line indicating forearm frequency
 
-		for (int i = 0; i < progress[0].length; i++) {
-			if (width > 512) {
-				int x = 4 * i;
+		//TODO: change spectrum lines to waveform
+		for (int i = 0 ; i < progress[0].length ; i++) {
+			if (width > 512) { // tablet?
+				int fs = 4 * i;
 				downy = (int) (500 - (progress[0][i] * 10));
 				upy = 500;
-				canvasDisplaySpectrum.drawLine(x, downy, x, upy , paintSpectrumDisplay);
-			} else {
+//				canvasDisplaySpectrum.drawLine(fs, downy, fs+4, downy , paintSpectrumDisplay); // spectrum (green lines) plotted here
+				canvasDisplaySpectrum.drawLine(fs, downy, fs, upy, paintSpectrumDisplay);
+//				canvasDisplaySpectrum.drawPoint(fs , downy , paintSpectrumDisplay);
+
+//				int val_b = getMaxProgress(body.BICEP_FRQ , progress);
+//				int val_br = (int) (Math.min(((val_b * 10) / lim_max) , 1) * max_col);
+//				int val_bg = (int) (Math.max((lim_max - ((val_b * 10)))/ lim_max , 0)  * max_col);
+//				drawBody.paintBicep.setColor(Color.rgb(val_br , val_bg , 0));
+//
+//				int val_t = getMaxProgress(body.TRICEPS_FRQ , progress);
+//				int val_tr = (int) (Math.min(((val_t * 10) / lim_max) , 1) * max_col);
+//				int val_tg = (int) (Math.max((lim_max - ((val_t * 10)))/ lim_max , 0)  * max_col);
+//				drawBody.paintTriceps.setColor(Color.rgb(val_tr , val_tg , 0));
+
+//				int val_f = getMaxProgress(body.FOREARM_FRQ , progress);
+//				int val_fr = (int) (Math.min(((val_f * 10) / lim_max) , 1) * max_col);
+//				int val_fg = (int) (Math.max((lim_max - ((val_f * 10)))/ lim_max , 0)  * max_col);
+//				Log.v("====COLOR VALUES====" , "\t\t\t\t\t\t\t\t\t\t val_b: " + val_b);
+////				Log.v("====COLOR VALUES====" , "\t\t\t\t\t\t\t\t\t\t val_b: " + val_b + "\t\t\t val_br: " + val_br + "\t\t\t val_bg: " + val_bg + "\t\t\t val_t: " + val_t + "\t\t\t val_tr: " + val_tr + "\t\t\t val_tg: " + val_tg + "\t\t\t val_f: " + val_f + "\t\t\t val_fr: " + val_fr + "\t\t\t val_fg: " + val_fg);
+//				drawBody.paintForearm.setColor(Color.rgb(val_fr , val_fg , 0));
+
+			} else { // smartphone?
 				int x = i;
 				downy = (int) (250 - (Math.abs(progress[0][i]) * 10));
 				upy = 250;
-				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay);
+				canvasDisplaySpectrum.drawLine(x, downy, x, upy, paintSpectrumDisplay); // spectrum (green lines) plotted here
 			}
 		}
 		if (width > 512) {
 			canvasDisplaySpectrum.drawLine(line_position_Bicep*4, origin, line_position_Bicep*4, upy, paintFreqLines_B); // draw bicep frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Triceps*4, origin, line_position_Triceps*4, upy, paintFreqLines_T); // draw triceps frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Forearm*4, origin, line_position_Forearm*4, upy, paintFreqLines_F); // draw forearm frequency line
-			canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min , paintMinMagnitude); // draw min magnitude dashed line
-			canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude); // draw max magnitude dashed line
+			canvasDisplaySpectrum.drawLine(origin , 500 - lim_min , width , 500 - lim_min , paintMinMagnitude); // draw min magnitude dashed line
+			canvasDisplaySpectrum.drawLine(origin , 500 - lim_max , width , 500 - lim_max , paintMaxMagnitude); // draw max magnitude dashed line
 			imageViewDisplaySpectrum.invalidate();
 		} else {
 			canvasDisplaySpectrum.drawLine(line_position_Bicep, origin, line_position_Bicep, upy, paintFreqLines_B); // draw bicep frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Triceps, origin, line_position_Triceps, upy, paintFreqLines_T); // draw triceps frequency line
 			canvasDisplaySpectrum.drawLine(line_position_Forearm, origin, line_position_Forearm, upy, paintFreqLines_F); // draw forearm frequency line
-			canvasDisplaySpectrum.drawLine(origin , lim_min , width , lim_min , paintMinMagnitude); // draw min magnitude dashed line
-			canvasDisplaySpectrum.drawLine(origin , lim_max , width , lim_max , paintMaxMagnitude); // draw max magnitude dashed line
+			canvasDisplaySpectrum.drawLine(origin , 500 - lim_min , width , 500 - lim_min , paintMinMagnitude); // draw min magnitude dashed line
+			canvasDisplaySpectrum.drawLine(origin , 500 - lim_max , width , 500 - lim_max , paintMaxMagnitude); // draw max magnitude dashed line
 			imageViewDisplaySpectrum.invalidate();
 		}
 
@@ -438,62 +470,67 @@ public class RecordTask extends AsyncTask<Void, double[], Boolean> {
 		Log.v("average: ", Double.toString(av));
 
 		while (counter <0) {
-			if (body.isBicepActive && !BwasActive) {
-				for(int i = 0 ; i < progress[0].length ; i++) {
+			if (body.isBicepActive) {
+				for(int i = 0 ; i < blockSize / 2 ; i++) {
+					Log.v("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tBICEP" , "PROG: " + magnitude[i]);
 					if(magnitude[i] >= high_magnitude) {
 						drawBody.paintBicep.setColor(Color.RED);
 					}
-					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
+					else if ((magnitude[i] < high_magnitude) && (magnitude[i] >= medium_magnitude)) {
 						drawBody.paintBicep.setColor(Color.rgb(255 , 165 , 0));
 					}
-//                    int red_value = (int) (Math.min(((500 - (progress[0][i] * 10)) / lim_max) , 1) * max_col);
-//                    int green_value = (int) (Math.max((lim_max - (500 - (progress[0][i] * 10)))/ lim_max , 0)  * max_col);
+//                    int red_value = (int) (Math.min(((progress[0][i] * 10) / lim_max) , 1) * max_col);
+//                    int green_value = (int) (Math.max((lim_max - ((progress[0][i] * 10)))/ lim_max , 0)  * max_col);
 //                    drawBody.paintBicep.setColor(Color.rgb(red_value , green_value , 0));
 					BwasActive = true;
 					body.isBicepActive = false;
 				}
 			}
-			else if (!body.isBicepActive && BwasActive){
+			else if (!body.isBicepActive){
 				drawBody.paintBicep.setColor(Color.GREEN);
 				BwasActive=false;
 			}
 
-			if (body.isTricepsActive && !TwasActive){
+			if (body.isTricepsActive){
 				for(int i = 0 ; i < blockSize / 2 ; i++) {
+					Log.v("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tTRICEPS" , "PROG: " + magnitude[i]);
 					if(magnitude[i] >= high_magnitude) {
 						drawBody.paintTriceps.setColor(Color.RED);
 					}
-					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
+					else if ((magnitude[i] < high_magnitude) && (magnitude[i] >= medium_magnitude)) {
 						drawBody.paintTriceps.setColor(Color.rgb(255 , 165 , 0));
 					}
-//                    int red_value = (int) (Math.min(((500 - (progress[0][i] * 10)) / lim_max) , 1) * max_col);
-//                    int green_value = (int) (Math.max((lim_max - (500 - (progress[0][i] * 10)))/ lim_max , 0)  * max_col);
+//					Log.v("progress[0][i] * 10 ", String.valueOf(progress[0][i] * 10));
+//                    int red_value = (int) (Math.min(((progress[0][i] * 10) / lim_max) , 1) * max_col);
+//                    int green_value = (int) (Math.max((lim_max - ((progress[0][i] * 10)))/ lim_max , 0)  * max_col);
+//                    Log.v("\t \t \t \t \t output" , "green value"+String.valueOf(green_value) + "\t red value " + String.valueOf(red_value)+"   prog "+String.valueOf(progress[0][i] * 10));
 //                    drawBody.paintBicep.setColor(Color.rgb(red_value , green_value , 0));
 					TwasActive=true;
 					body.isTricepsActive=false;
 				}
 			}
-			else if(!body.isTricepsActive && TwasActive){
+			else if(!body.isTricepsActive){
 				drawBody.paintTriceps.setColor(Color.GREEN);
 				TwasActive=false;
 			}
 
-			if (body.isForearmActive && !FwasActive) {
+			if (body.isForearmActive) {
 				for(int i = 0 ; i < blockSize / 2 ; i++) {
+					Log.v("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tFOREARM" , "PROG: " + magnitude[i]);
 					if(magnitude[i] >= high_magnitude) {
 						drawBody.paintForearm.setColor(Color.RED);
 					}
-					else if (magnitude[i] < high_magnitude || magnitude[i] >= medium_magnitude) {
+					else if ((magnitude[i] < high_magnitude) && (magnitude[i] >= medium_magnitude)) {
 						drawBody.paintForearm.setColor(Color.rgb(255 , 165 , 0));
 					}
-//                    int red_value = (int) (Math.min(((500 - (progress[0][i] * 10)) / lim_max) , 1) * max_col);
-//                    int green_value = (int) (Math.max((lim_max - (500 - (progress[0][i] * 10)))/ lim_max , 0)  * max_col);
+//                    int red_value = (int) (Math.min(((progress[0][i] * 10) / lim_max) , 1) * max_col);
+//                    int green_value = (int) (Math.max((lim_max - ((progress[0][i] * 10)))/ lim_max , 0)  * max_col);
 //                    drawBody.paintBicep.setColor(Color.rgb(red_value , green_value , 0));
 					FwasActive = true;
 					body.isForearmActive = false;
 				}
 			}
-			else if (!body.isForearmActive && FwasActive){
+			else if (!body.isForearmActive){
 				drawBody.paintForearm.setColor(Color.GREEN);
 				FwasActive=false;
 			}
